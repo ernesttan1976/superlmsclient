@@ -1,14 +1,14 @@
 import React from "react";
-import { IResourceComponentsProps } from "@refinedev/core";
-import { Edit, useForm } from "@refinedev/antd";
-import { Form, Input, DatePicker } from "antd";
+import { IResourceComponentsProps, useApiUrl } from "@refinedev/core";
+import { Edit, useForm, getValueFromEvent } from "@refinedev/antd";
+import { Form, Input, DatePicker, Upload } from "antd";
 import dayjs from "dayjs";
 
 export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
     const { formProps, saveButtonProps, queryResult } = useForm();
 
     const coursesData = queryResult?.data?.data;
-
+    const apiUrl = useApiUrl();
     return (
         <Edit saveButtonProps={saveButtonProps}>
             <Form {...formProps} layout="vertical">
@@ -45,6 +45,28 @@ export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
                 >
                     <Input.TextArea rows={5} />
                 </Form.Item>
+
+                <Form.Item label="Image">
+                    <Form.Item
+                        name="image"
+                        valuePropName="image"
+                        getValueFromEvent={getValueFromEvent}
+                        noStyle
+                    >
+                        <Upload.Dragger
+                            name="file"
+                            action={`${apiUrl}/media/upload`}
+                            listType="picture"
+                            maxCount={1}
+                            multiple
+                        >
+                            <p className="ant-upload-text">
+                                Drag & drop a file in this area
+                            </p>
+                        </Upload.Dragger>
+                    </Form.Item>
+                </Form.Item>
+
                 <Form.Item
                     label="Start Date"
                     name={["startDate"]}
@@ -84,37 +106,10 @@ export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
                         </Form.Item>
                     ))}
                 </>
-                <Form.Item
-                    label="Created At"
-                    name={["created_at"]}
-                    rules={[
-                        {
-                            required: true,
-                        },
-                    ]}
-                    getValueProps={(value) => ({
-                        value: value ? dayjs(value) : undefined,
-                    })}
-                >
-                    <DatePicker />
-                </Form.Item>
-                <Form.Item
-                    label="Updated At"
-                    name={["updated_at"]}
-                    rules={[
-                        {
-                            required: true,
-                        },
-                    ]}
-                    getValueProps={(value) => ({
-                        value: value ? dayjs(value) : undefined,
-                    })}
-                >
-                    <DatePicker />
-                </Form.Item>
             </Form>
         </Edit>
     );
 };
+
 
 export default CourseEdit

@@ -45,10 +45,10 @@ import { InferField } from "@refinedev/inferencer/antd";
 
 function App() {
 
-  const coursesTransformer = (field: InferField) => {
-    console.log(field.key);
-    return field;
-  }
+  // const coursesTransformer = (field: InferField) => {
+  //   console.log(field.key);
+  //   return field;
+  // }
 
   return (
     <BrowserRouter>

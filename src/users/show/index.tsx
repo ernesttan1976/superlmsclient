@@ -39,6 +39,16 @@ export const UserShow: React.FC<IResourceComponentsProps> = () => {
             <TextField value={record?.userRole} />
             <Title level={5}>Avatar</Title>
             <ImageField style={{ maxWidth: 200 }} value={record?.avatar} />
+            <Title level={5}>Courses</Title>
+            {coursesIsLoading ? (
+                <>Loading...</>
+            ) : (
+                <>
+                    {coursesData?.data?.map((course: any) => (
+                        <TagField key={course?.title} value={course?.title} />
+                    ))}
+                </>
+            )}
             <Title level={5}>Created At</Title>
             <DateField value={record?.created_at} />
             <Title level={5}>Updated At</Title>

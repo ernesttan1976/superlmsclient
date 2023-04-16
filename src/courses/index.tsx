@@ -27,7 +27,14 @@ export const CourseList: React.FC<IResourceComponentsProps> = () => {
                     render={(value: any) => (
                         <ImageField
                             style={{ width: "200px" }}
-                            value={value} />)}/>
+                            value={value}
+                        />
+                    )}
+                />
+                <Table.Column
+                    dataIndex={["instructor_id", "name"]}
+                    title="Instructor"
+                />
                 <Table.Column
                     dataIndex={["startDate"]}
                     title="Start Date"
@@ -37,6 +44,17 @@ export const CourseList: React.FC<IResourceComponentsProps> = () => {
                     dataIndex={["endDate"]}
                     title="End Date"
                     render={(value: any) => <DateField value={value} />}
+                />
+                <Table.Column
+                    dataIndex="students_id"
+                    title="Students"
+                    render={(value: any[]) => (
+                        <>
+                            {value?.map((item) => (
+                                <TagField value={item?.name} key={item?.name} />
+                            ))}
+                        </>
+                    )}
                 />
                 <Table.Column
                     dataIndex="lessons_id"
@@ -86,4 +104,4 @@ export const CourseList: React.FC<IResourceComponentsProps> = () => {
     );
 };
 
-export default CourseList
+export default CourseList;

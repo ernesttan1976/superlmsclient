@@ -4,9 +4,8 @@ import {
     Show,
     TagField,
     TextField,
-    MarkdownField,
+    ImageField,
     DateField,
-    NumberField,
 } from "@refinedev/antd";
 import { Typography } from "antd";
 
@@ -25,7 +24,7 @@ export const CourseShow: React.FC<IResourceComponentsProps> = () => {
             <Title level={5}>Description</Title>
             <TextField value={record?.description} />
             <Title level={5}>Image</Title>
-            <MarkdownField value={record?.image} />
+            <ImageField style={{ maxWidth: "400px" }} value={record?.image}/>
             <Title level={5}>Start Date</Title>
             <DateField value={record?.startDate} />
             <Title level={5}>End Date</Title>
@@ -34,12 +33,9 @@ export const CourseShow: React.FC<IResourceComponentsProps> = () => {
             {record?.lessons_id?.map((item: any) => (
                 <TagField value={item?.title} key={item?.title} />
             ))}
-            <Title level={5}>Created At</Title>
-            <DateField value={record?.created_at} />
-            <Title level={5}>Updated At</Title>
-            <DateField value={record?.updated_at} />
         </Show>
     );
 };
+
 
 export default CourseShow;

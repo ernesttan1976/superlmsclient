@@ -11,23 +11,12 @@ export const UserEdit: React.FC<IResourceComponentsProps> = () => {
 
     const { selectProps: coursesSelectProps } = useSelect({
         resource: "courses",
-        defaultValue: usersData?.courses_id,
+        defaultValue: usersData?.courses_id.title,
     });
 
     return (
         <Edit saveButtonProps={saveButtonProps}>
             <Form {...formProps} layout="vertical">
-                <Form.Item
-                    label="Courses"
-                    name={"courses_id"}
-                    rules={[
-                        {
-                            required: true,
-                        },
-                    ]}
-                >
-                    <Select mode="multiple" {...coursesSelectProps} />
-                </Form.Item>
                 <Form.Item
                     label="Name"
                     name={["name"]}
@@ -59,7 +48,22 @@ export const UserEdit: React.FC<IResourceComponentsProps> = () => {
                         },
                     ]}
                 >
-                    <Input />
+                    <Select
+                        options={[
+                            {
+                                label: "Student",
+                                value: "Student",
+                            },
+                            {
+                                label: "Instructor",
+                                value: "Instructor",
+                            },
+                            {
+                                label: "Admin",
+                                value: "Admin",
+                            },
+                        ]}
+                    />
                 </Form.Item>
                 <Form.Item label="Avatar">
                     <Form.Item
@@ -86,32 +90,23 @@ export const UserEdit: React.FC<IResourceComponentsProps> = () => {
                     </Form.Item>
                 </Form.Item>
                 <Form.Item
-                    label="Created At"
-                    name={["created_at"]}
+                    label="Courses"
+                    name={"courses_id"}
                     rules={[
                         {
                             required: true,
                         },
                     ]}
-                    getValueProps={(value) => ({
-                        value: value ? dayjs(value) : undefined,
-                    })}
+                    getValueProps={(value: any[]) => {
+                        return {
+                            value: value?.map((item) => item?.title),
+                        };
+                    }}
+                    getValueFromEvent={(selected: string[]) => {
+                        return selected?.map((item) => ({ title: item }));
+                    }}
                 >
-                    <DatePicker />
-                </Form.Item>
-                <Form.Item
-                    label="Updated At"
-                    name={["updated_at"]}
-                    rules={[
-                        {
-                            required: true,
-                        },
-                    ]}
-                    getValueProps={(value) => ({
-                        value: value ? dayjs(value) : undefined,
-                    })}
-                >
-                    <DatePicker />
+                    <Select mode="multiple" {...coursesSelectProps} />
                 </Form.Item>
             </Form>
         </Edit>

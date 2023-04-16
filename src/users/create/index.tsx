@@ -72,54 +72,23 @@ export const UserCreate: React.FC<IResourceComponentsProps> = () => {
                     </Form.Item>
                 </Form.Item>
                 <Form.Item
-                    label="Course"
-                    name={"course_ids"}
+                    label="Courses"
+                    name={"courses_id"}
                     rules={[
                         {
                             required: true,
                         },
                     ]}
+                    getValueProps={(value: any[]) => {
+                        return {
+                            value: value?.map((item) => item?.title),
+                        };
+                    }}
+                    getValueFromEvent={(selected: string[]) => {
+                        return selected?.map((item) => ({ title: item }));
+                    }}
                 >
                     <Select mode="multiple" {...courseSelectProps} />
-                </Form.Item>
-                <Form.Item
-                    label="Created At"
-                    name={["created_at"]}
-                    rules={[
-                        {
-                            required: true,
-                        },
-                    ]}
-                    getValueProps={(value) => ({
-                        value: value ? dayjs(value) : undefined,
-                    })}
-                >
-                    <DatePicker />
-                </Form.Item>
-                <Form.Item
-                    label="Updated At"
-                    name={["updated_at"]}
-                    rules={[
-                        {
-                            required: true,
-                        },
-                    ]}
-                    getValueProps={(value) => ({
-                        value: value ? dayjs(value) : undefined,
-                    })}
-                >
-                    <DatePicker />
-                </Form.Item>
-                <Form.Item
-                    label="  V"
-                    name={["__v"]}
-                    rules={[
-                        {
-                            required: true,
-                        },
-                    ]}
-                >
-                    <Input />
                 </Form.Item>
             </Form>
         </Create>

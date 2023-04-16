@@ -100,8 +100,8 @@ export const CourseCreate: React.FC<IResourceComponentsProps> = () => {
                     <DatePicker />
                 </Form.Item>
                 <Form.Item
-                    label="  V"
-                    name={["__v"]}
+                    label="Instructor"
+                    name={["instructor_id", "name"]}
                     rules={[
                         {
                             required: true,
@@ -114,5 +114,6 @@ export const CourseCreate: React.FC<IResourceComponentsProps> = () => {
         </Create>
     );
 };
+
 
 export default CourseCreate
