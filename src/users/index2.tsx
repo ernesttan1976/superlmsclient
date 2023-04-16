@@ -12,7 +12,6 @@ import {
 } from "@refinedev/antd";
 import { Table, Space } from "antd";
 
-
 export const UserList: React.FC<IResourceComponentsProps> = () => {
     const { tableProps } = useTable({
         syncWithLocation: true,
@@ -21,7 +20,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     const { data: courseData, isLoading: courseIsLoading } = useMany({
         resource: "courses",
         ids: [].concat(
-            ...(tableProps?.dataSource?.map((item) => item?._id) ?? []),
+            ...(tableProps?.dataSource?.map((item) => item?.course_ids) ?? []),
         ),
         queryOptions: {
             enabled: !!tableProps?.dataSource,
@@ -49,24 +48,15 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                     )}
                 />
                 <Table.Column
-                    dataIndex="courses_id"
-                    title="Courses"
+                    dataIndex="course_ids"
+                    title="Course"
                     render={(value: any[]) =>
                         courseIsLoading ? (
                             <>Loading...</>
                         ) : (
                             <>
                                 {value?.map((item, index) => (
-                                    <TagField
-                                        key={index}
-                                        value={
-                                            courseData?.data?.find(
-                                                (resourceItems) =>
-                                                    resourceItems._id ===
-                                                    item,
-                                            )?.title
-                                        }
-                                    />
+                                    <TagField key={index} value={item} />
                                 ))}
                             </>
                         )
@@ -82,7 +72,6 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                     title="Updated At"
                     render={(value: any) => <DateField value={value} />}
                 />
-                <Table.Column dataIndex="__v" title="  V" />
                 <Table.Column
                     title="Actions"
                     dataIndex="actions"
@@ -91,12 +80,12 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                             <EditButton
                                 hideText
                                 size="small"
-                                recordItemId={record.id}
+                                recordItemId={record._id}
                             />
                             <ShowButton
                                 hideText
                                 size="small"
-                                recordItemId={record.id}
+                                recordItemId={record._id}
                             />
                         </Space>
                     )}
@@ -106,4 +95,4 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
     );
 };
 
-export default UserList
+export default UserList;

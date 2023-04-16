@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
+    "@auth0/auth0-react": "^2.0.1",
     "@refinedev/antd": "^5.3.12",
     "@refinedev/cli": "^2.1.2",
     "@refinedev/core": "^4.10.0",
