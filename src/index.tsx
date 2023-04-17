@@ -17,6 +17,7 @@ root.render(
     clientId="UgyE6aFSr8Teo3tuJR0u8XmXjtUJ8npr" 
     authorizationParams={{redirect_uri: window.location.origin}}>
     <App />
+    <h4>{window.location.origin}</h4>
     </Auth0Provider>
   </React.StrictMode>
 );
