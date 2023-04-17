@@ -16,9 +16,8 @@ root.render(
     clientId="UgyE6aFSr8Teo3tuJR0u8XmXjtUJ8npr" 
     authorizationParams={{redirect_uri: window.location.origin}}>
     <App />
-    
     </Auth0Provider>
-  </React.StrictMode>
+   </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

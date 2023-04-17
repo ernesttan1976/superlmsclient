@@ -1,14 +1,4 @@
 {
-  "sub": "facebook|10159421411670975",
-  "given_name": "Ernest",
-  "family_name": "Tan",
-  "nickname": "Ernest Tan",
-  "name": "Ernest Tan",
-  "picture": "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=10159421411670975&height=50&width=50&ext=1684299851&hash=AeRNwzZaPnmw0H-IYXM",
-  "updated_at": "2023-04-17T05:04:11.483Z"
-}
-
-{
   "sub": "github|65232389",
   "nickname": "ernesttan1976",
   "name": "Ernest Tan",
@@ -27,14 +17,13 @@
   "updated_at": "2023-04-17T05:06:04.901Z"
 }
 
+
 {
-  "sub": "windowslive|8db0f0c467b44d74",
+  "sub": "facebook|10159422223640975",
   "given_name": "Ernest",
   "family_name": "Tan",
-  "nickname": "Ernest Tan",
+  "nickname": "ernesttan1976",
   "name": "Ernest Tan",
-  "picture": "https://apis.live.net/v5.0/8db0f0c467b44d74/picture",
-  "locale": "en-SG",
-  "updated_at": "2023-04-17T05:07:37.530Z"
+  "picture": "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=10159422223640975&height=50&width=50&ext=1684325541&hash=AeSCBOC0IZ7-DHSCyhI",
+  "updated_at": "2023-04-17T12:12:21.340Z"
 }
-
