@@ -9,7 +9,6 @@ const container = document.getElementById("root") as HTMLElement;
 const root = createRoot(container);
 
 // const OAUTH_CALLBACK = (process.env.NODE_ENV === 'production') ? process.env.REACT_APP_PRODUCTION_OAUTH_CALLBACK : process.env.REACT_APP_DEV_OAUTH_CALLBACK;
-
 root.render(
   <React.StrictMode>
     <Auth0Provider 
@@ -17,7 +16,7 @@ root.render(
     clientId="UgyE6aFSr8Teo3tuJR0u8XmXjtUJ8npr" 
     authorizationParams={{redirect_uri: window.location.origin}}>
     <App />
-    <h4>{window.location.origin}</h4>
+    
     </Auth0Provider>
   </React.StrictMode>
 );
