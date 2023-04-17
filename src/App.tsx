@@ -134,7 +134,7 @@ const App: React.FC = () => {
 
   const PRODUCTION_URI = "https://superlmsserver.cyclic.app:3000";
   const DEV_URI = "http://127.0.0.1:3001";
-  const DATA_URI = (process.env.NODE_ENV === 'production') ? PRODUCTION_URI : DEV_URI;
+  const DATA_URI = (process.env.NODE_ENV === 'production') ? process.env.PRODUCTION_URI : process.env.DEV_URI;
 
   return (
     <BrowserRouter>

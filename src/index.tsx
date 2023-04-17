@@ -8,9 +8,9 @@ import reportWebVitals from "./reportWebVitals";
 const container = document.getElementById("root") as HTMLElement;
 const root = createRoot(container);
 
-const PRODUCTION_OAUTH_CALLBACK = "https://superlmsserver.vercel.app:3000";
-const DEV_OAUTH_CALLBACK = "http://127.0.0.1:3000";
-const OAUTH_CALLBACK = (process.env.NODE_ENV === 'production') ? PRODUCTION_OAUTH_CALLBACK : DEV_OAUTH_CALLBACK;
+// const PRODUCTION_OAUTH_CALLBACK = "https://superlms.vercel.app:3000";
+// const DEV_OAUTH_CALLBACK = "http://127.0.0.1:3000";
+const OAUTH_CALLBACK = (process.env.NODE_ENV === 'production') ? process.env.PRODUCTION_OAUTH_CALLBACK : process.env.DEV_OAUTH_CALLBACK;
 
 // if (window.location.origin==="http://localhost:3000"){
 //   redirect_uri2 = 'https://103.252.202.42:3000';
