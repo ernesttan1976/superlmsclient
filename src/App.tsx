@@ -132,6 +132,10 @@ const App: React.FC = () => {
     }
   });
 
+  const PRODUCTION_URI = "https://superlmsserver.cyclic.app:3000";
+  const DEV_URI = "http://127.0.0.1:3001";
+  const DATA_URI = (process.env.NODE_ENV === 'production') ? PRODUCTION_URI : DEV_URI;
+
   return (
     <BrowserRouter>
       <RefineKbarProvider>
@@ -140,7 +144,7 @@ const App: React.FC = () => {
             routerProvider={routerBindings}
             authProvider={authProvider}
             dataProvider={{
-              default: dataProvider("http://127.0.0.1:3001"),
+              default: dataProvider(DATA_URI),
               dummy: dataProvider("https://api.fake-rest.refine.dev"),
 
             }}

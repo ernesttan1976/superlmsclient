@@ -8,23 +8,22 @@ import reportWebVitals from "./reportWebVitals";
 const container = document.getElementById("root") as HTMLElement;
 const root = createRoot(container);
 
-let redirect_uri2 = "";
-
-redirect_uri2=window.location.origin;
+const PRODUCTION_OAUTH_CALLBACK = "https://superlmsserver.vercel.app:3000";
+const DEV_OAUTH_CALLBACK = "http://127.0.0.1:3000";
+const OAUTH_CALLBACK = (process.env.NODE_ENV === 'production') ? PRODUCTION_OAUTH_CALLBACK : DEV_OAUTH_CALLBACK;
 
 // if (window.location.origin==="http://localhost:3000"){
 //   redirect_uri2 = 'https://103.252.202.42:3000';
 // } else {
 //   redirect_uri2 = window.location.origin;
 // }
-console.log(window.location.origin, redirect_uri2 );
 
 root.render(
   <React.StrictMode>
     <Auth0Provider 
     domain="dev-ndcpsqh6dgrlwy4z.us.auth0.com" 
     clientId="UgyE6aFSr8Teo3tuJR0u8XmXjtUJ8npr" 
-    authorizationParams={{redirect_uri: redirect_uri2}}>
+    authorizationParams={{redirect_uri: OAUTH_CALLBACK}}>
     <App />
     </Auth0Provider>
   </React.StrictMode>
