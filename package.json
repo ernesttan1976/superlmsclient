@@ -16,7 +16,8 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.8.1",
-    "react-scripts": "^5.0.0"
+    "react-scripts": "^5.0.0",
+    "refine": "^0.0.1-alpha"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.4",

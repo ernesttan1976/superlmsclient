@@ -132,9 +132,9 @@ const App: React.FC = () => {
     }
   });
 
-  const PRODUCTION_URI = "https://superlmsserver.cyclic.app:3000";
-  const DEV_URI = "http://127.0.0.1:3001";
-  const DATA_URI = (process.env.NODE_ENV === 'production') ? process.env.PRODUCTION_URI : process.env.DEV_URI;
+  // const PRODUCTION_URI = "https://superlmsserver.cyclic.app:3000";
+  // const DEV_URI = "http://127.0.0.1:3001";
+  const DATA_URI = (process.env.NODE_ENV === 'production') ? process.env.REACT_APP_PRODUCTION_URI : process.env.REACT_APP_DEV_URI;
 
   return (
     <BrowserRouter>
@@ -143,10 +143,12 @@ const App: React.FC = () => {
           <Refine
             routerProvider={routerBindings}
             authProvider={authProvider}
-            dataProvider={{
+            dataProvider={ DATA_URI? {
               default: dataProvider(DATA_URI),
               dummy: dataProvider("https://api.fake-rest.refine.dev"),
-
+            }:{
+              default: dataProvider("https://api.fake-rest.refine.dev"),
+              dummy: dataProvider("https://api.fake-rest.refine.dev"),
             }}
             notificationProvider={notificationProvider}
             options={{
