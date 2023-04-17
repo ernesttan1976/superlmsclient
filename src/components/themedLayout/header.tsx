@@ -2,6 +2,8 @@ import React from "react";
 import { useActiveAuthProvider, useGetIdentity } from "@refinedev/core";
 import { Layout as AntdLayout, Typography, Avatar, Space, theme } from "antd";
 import type { RefineThemedLayoutHeaderProps } from "@refinedev/antd";
+import Profile from "../profile"
+import LogoutButton from "../../components/logoutButton";
 
 const { Text } = Typography;
 const { useToken } = theme;
@@ -33,8 +35,8 @@ export const ThemedHeader: React.FC<RefineThemedLayoutHeaderProps> = () => {
     >
       <Space>
         <Space size="middle">
-          {user?.name && <Text strong>{user.name}</Text>}
-          {user?.avatar && <Avatar src={user?.avatar} alt={user?.name} />}
+          <Profile />
+          <LogoutButton />
         </Space>
       </Space>
     </AntdLayout.Header>
@@ -42,3 +44,6 @@ export const ThemedHeader: React.FC<RefineThemedLayoutHeaderProps> = () => {
 };
 
 export default ThemedHeader;
+
+// {user?.name && <Text strong>{user.name}</Text>}
+// {user?.avatar && <Avatar src={user?.avatar} alt={user?.name} />}
