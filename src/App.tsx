@@ -79,7 +79,7 @@ const App: React.FC = () => {
       };
     },
     onError: async (error) => {
-      console.error(error);
+      console.error("onError", error);
       return { error };
     },
     check: async () => {
@@ -265,7 +265,7 @@ const App: React.FC = () => {
               <Route
                 element={
                   <Authenticated fallback={<Outlet />}>
-                    <NavigateToResource resource="posts" />
+                    <NavigateToResource resource="courses" />
                   </Authenticated>
                 }
               >
