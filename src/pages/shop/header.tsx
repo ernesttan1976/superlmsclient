@@ -2,7 +2,7 @@ import React from "react";
 import { useActiveAuthProvider, useGetIdentity } from "@refinedev/core";
 import { Layout as AntdLayout, Typography, Avatar, Space, theme } from "antd";
 import type { RefineThemedLayoutHeaderProps } from "@refinedev/antd";
-import Profile from "../profile"
+import Profile from "../../components/profile"
 
 const { Text } = Typography;
 const { useToken } = theme;

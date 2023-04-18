@@ -8,7 +8,6 @@ import reportWebVitals from "./reportWebVitals";
 const container = document.getElementById("root") as HTMLElement;
 const root = createRoot(container);
 
-// const OAUTH_CALLBACK = (process.env.NODE_ENV === 'production') ? process.env.REACT_APP_PRODUCTION_OAUTH_CALLBACK : process.env.REACT_APP_DEV_OAUTH_CALLBACK;
 root.render(
   <React.StrictMode>
     <Auth0Provider 

@@ -43,7 +43,8 @@ import CourseEdit from "./courses/edit"
 // import { InferField } from "@refinedev/inferencer/antd";
 
 import { ThemedLayout } from "components/themedLayout";
-
+import { ShopThemedLayout } from "pages/shop/index";
+import ShopContent from "pages/shop/shop";
 
 // dataProvider={dataProvider("https://api.fake-rest.refine.dev")}
 //   if (field.key === "size") {
@@ -67,7 +68,7 @@ const App: React.FC = () => {
   }
 
   const authProvider: AuthBindings = {
-    login: async () => ({success: true}),
+    login: async () => ({ success: true }),
     logout: async () => {
       logout({ logoutParams: { returnTo: window.location.origin } });
       return {
@@ -112,183 +113,197 @@ const App: React.FC = () => {
     },
     getPermissions: async () => null,
     getIdentity: async () => {
-        if (user) {
-          return {
-            ...user,
-            avatar: user.picture,
-          };
-        }
-        return null;
-      },
+      if (user) {
+        return {
+          ...user,
+          avatar: user.picture,
+        };
+      }
+      return null;
+    },
   };
 
-getIdTokenClaims().then((token) => {
-  if (token) {
-    axios.defaults.headers.common = {
-      Authorization: `Bearer ${token.__raw}`,
-    };
-  }
-});
+  getIdTokenClaims().then((token) => {
+    if (token) {
+      axios.defaults.headers.common = {
+        Authorization: `Bearer ${token.__raw}`,
+      };
+    }
+  });
 
-const DATA_URI = (process.env.NODE_ENV === 'production') ? process.env.REACT_APP_PRODUCTION_URI : process.env.REACT_APP_DEV_URI;
+  const DATA_URI = (process.env.NODE_ENV === 'production') ? process.env.REACT_APP_PRODUCTION_URI : process.env.REACT_APP_DEV_URI;
 
-return (
-  <BrowserRouter>
-    <RefineKbarProvider>
-      <ColorModeContextProvider>
-        <Refine
-          routerProvider={routerBindings}
-          authProvider={authProvider}
-          dataProvider={DATA_URI ? {
-            default: dataProvider(DATA_URI),
-            dummy: dataProvider("https://api.fake-rest.refine.dev"),
-          } : {
-            default: dataProvider("https://api.fake-rest.refine.dev"),
-            dummy: dataProvider("https://api.fake-rest.refine.dev"),
-          }}
-          notificationProvider={notificationProvider}
-          options={{
-            syncWithLocation: true,
-            warnWhenUnsavedChanges: true,
-          }}
-          resources={[
-            {
-              name: 'courses',
-              list: '/courses',
-              show: '/courses/show/:id',
-              create: '/courses/create',
-              edit: '/courses/edit/:id',
-              meta: {
-                canDelete: true,
-                dataProviderName: "default",
+  return (
+    <BrowserRouter>
+      <RefineKbarProvider>
+        <ColorModeContextProvider>
+          <Refine
+            routerProvider={routerBindings}
+            authProvider={authProvider}
+            dataProvider={DATA_URI ? {
+              default: dataProvider(DATA_URI),
+              dummy: dataProvider("https://api.fake-rest.refine.dev"),
+            } : {
+              default: dataProvider("https://api.fake-rest.refine.dev"),
+              dummy: dataProvider("https://api.fake-rest.refine.dev"),
+            }}
+            notificationProvider={notificationProvider}
+            options={{
+              syncWithLocation: true,
+              warnWhenUnsavedChanges: true,
+            }}
+            resources={[
+              {
+                name: 'courses',
+                list: '/dashboard/courses',
+                show: '/dashboard/courses/show/:id',
+                create: '/dashboard/courses/create',
+                edit: '/dashboard/courses/edit/:id',
+                meta: {
+                  canDelete: true,
+                  dataProviderName: "default",
+                },
               },
-            },
-            {
-              name: 'users',
-              list: '/users',
-              show: '/users/show/:id',
-              create: '/users/create',
-              edit: '/users/edit/:id',
-              meta: {
-                canDelete: true,
-                dataProviderName: "default",
+              {
+                name: 'users',
+                list: '/dashboard/users',
+                show: '/dashboard/users/show/:id',
+                create: '/dashboard/users/create',
+                edit: '/dashboard/users/edit/:id',
+                meta: {
+                  canDelete: true,
+                  dataProviderName: "default",
+                },
               },
-            },
-            {
-              name: 'blog_posts',
-              list: '/blog-posts',
-              show: '/blog-posts/show/:id',
-              create: '/blog-posts/create',
-              edit: '/blog-posts/edit/:id',
-              meta: {
-                canDelete: true,
-                dataProviderName: "dummy",
+              {
+                name: 'blog_posts',
+                list: '/dashboard/blog-posts',
+                show: '/dashboard/blog-posts/show/:id',
+                create: '/dashboard/blog-posts/create',
+                edit: '/dashboard/blog-posts/edit/:id',
+                meta: {
+                  canDelete: true,
+                  dataProviderName: "dummy",
+                },
               },
-            },
-            {
-              name: 'categories',
-              list: '/categories',
-              show: '/categories/show/:id',
-              meta: {
-                dataProviderName: "dummy",
+              {
+                name: 'categories',
+                list: '/dashboard/categories',
+                show: '/dashboard/categories/show/:id',
+                meta: {
+                  dataProviderName: "dummy",
+                },
               },
-            },
-          ]}
-        >
-          <Routes>
-            <Route
-              element={
-                <Authenticated fallback={<CatchAllNavigate to="/login" />}>
-                  <ThemedLayout>
+            ]}
+          >
+            <Routes>
+              <Route path="/"
+                element={
+                  <ShopThemedLayout>
                     <Outlet />
-                  </ThemedLayout>
-                </Authenticated>
-              }
-            >
-              <Route index element={<NavigateToResource />} />
+                  </ShopThemedLayout>
+                }
+              >
+                <Route path="/" element={<ShopContent />} />
+              </Route>
+            </Routes>
 
-              <Route path="courses">
-                <Route index element={<CourseList />} />
-                <Route
-                  path="create"
-                  element={<CourseCreate />}
-                />
-                <Route
-                  path="edit/:id"
-                  element={<CourseEdit />}
-                />
-                <Route
-                  path="show/:id"
-                  element={<CourseShow />}
-                />
+            <Routes>
+              <Route path="/dashboard"
+                element={
+                  <Authenticated fallback={<CatchAllNavigate to="/login" />}>
+                    <ThemedLayout>
+                      <Outlet />
+                    </ThemedLayout>
+                  </Authenticated>
+                }
+              >
+                <Route index element={<NavigateToResource />} />
+
+                <Route path="/dashboard/courses">
+                  <Route index element={<CourseList />} />
+                  <Route
+                    path="create"
+                    element={<CourseCreate />}
+                  />
+                  <Route
+                    path="edit/:id"
+                    element={<CourseEdit />}
+                  />
+                  <Route
+                    path="show/:id"
+                    element={<CourseShow />}
+                  />
+                </Route>
+
+                <Route path="/dashboard/users">
+                  <Route index element={<UserList />} />
+                  <Route
+                    path="create"
+                    element={<UserCreate />}
+                  />
+                  <Route
+                    path="edit/:id"
+                    element={<UserEdit />}
+                  />
+                  <Route
+                    path="show/:id"
+                    element={<UserShow />}
+                  />
+                </Route>
+
+                <Route path="/dashboard/blog-posts">
+                  <Route index element={<BlogPostList />} />
+                  <Route
+                    path="show/:id"
+                    element={<BlogPostShow />}
+                  />
+                  <Route path="create" element={<BlogPostCreate />} />
+                  <Route
+                    path="edit/:id"
+                    element={<BlogPostEdit />}
+                  />
+                </Route>
+                <Route path="/dashboard/categories">
+                  <Route index element={<CategoryList />} />
+                  <Route
+                    path="show/:id"
+                    element={<CategoryShow />}
+                  />
+                </Route>
               </Route>
 
-              <Route path="users">
-                <Route index element={<UserList />} />
-                <Route
-                  path="create"
-                  element={<UserCreate />}
-                />
-                <Route
-                  path="edit/:id"
-                  element={<UserEdit />}
-                />
-                <Route
-                  path="show/:id"
-                  element={<UserShow />}
-                />
+              <Route
+                element={
+                  <Authenticated fallback={<Outlet />}>
+                    <NavigateToResource />
+                  </Authenticated>
+                }
+              >
+                <Route path="/login" element={<Login />} />
               </Route>
 
-              <Route path="blog-posts">
-                <Route index element={<BlogPostList />} />
-                <Route
-                  path="show/:id"
-                  element={<BlogPostShow />}
-                />
-                <Route path="create" element={<BlogPostCreate />} />
-                <Route
-                  path="edit/:id"
-                  element={<BlogPostEdit />}
-                />
-              </Route>
-              <Route path="categories">
-                <Route index element={<CategoryList />} />
-                <Route
-                  path="show/:id"
-                  element={<CategoryShow />}
-                />
-              </Route>
-            </Route>
 
-            <Route
-              element={
-                <Authenticated fallback={<Outlet />}>
-                  <NavigateToResource />
-                </Authenticated>
-              }
-            >
-              <Route path="/login" element={<Login />} />
-            </Route>
 
-            <Route
-              element={
-                <Authenticated>
-                  <ThemedLayout>
-                    <Outlet />
-                  </ThemedLayout>
-                </Authenticated>
-              }
-            >
-              <Route path="*" element={<ErrorComponent />} />
-            </Route>
-          </Routes>
-          <RefineKbar />
-          <UnsavedChangesNotifier />
-        </Refine>
-      </ColorModeContextProvider>
-    </RefineKbarProvider>
-  </BrowserRouter>
-);
+              <Route
+                element={
+                  <Authenticated>
+                    <ThemedLayout>
+                      <Outlet />
+                    </ThemedLayout>
+                  </Authenticated>
+                }
+              >
+                <Route path="*" element={<ErrorComponent />} />
+              </Route>
+            </Routes>
+            <RefineKbar />
+            <UnsavedChangesNotifier />
+          </Refine>
+        </ColorModeContextProvider>
+      </RefineKbarProvider>
+    </BrowserRouter>
+  );
 }
 
 export default App;

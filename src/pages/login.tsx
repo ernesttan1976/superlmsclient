@@ -1,6 +1,6 @@
 import { Layout, Button } from "antd";
 import { useAuth0 } from "@auth0/auth0-react";
-import refineLogo from "./refine.svg";
+import logo from "./SuperLMSLogoMedium.png";
 
 export const Login: React.FC = () => {
     const { loginWithRedirect } = useAuth0();
@@ -15,7 +15,7 @@ export const Login: React.FC = () => {
             <div style={{ height: "100vh", display: "flex" }}>
                 <div style={{ maxWidth: "200px", margin: "auto" }}>
                     <div style={{ marginBottom: "28px" }}>
-                        <img src={refineLogo} alt="Refine" />
+                        <img src={logo} alt="Refine" />
                     </div>
                     <Button
                         type="primary"

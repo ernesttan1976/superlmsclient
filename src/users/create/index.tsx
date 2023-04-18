@@ -1,13 +1,38 @@
 import React from "react";
-import { IResourceComponentsProps } from "@refinedev/core";
+import { IResourceComponentsProps, HttpError } from "@refinedev/core";
 import { Create, useForm, useSelect, getValueFromEvent } from "@refinedev/antd";
 import { Form, Input, Upload, Select, DatePicker } from "antd";
 import dayjs from "dayjs";
 
+interface ICourse {
+    _id: number;
+    title: string;
+    description: string;
+    image: string;
+    instructor_id: string;
+    startDate: Date;
+    endDate: Date;
+    students_id: [string];
+    lessons_id: [string];
+    created_at: Date;
+    updated_at: Date;
+}
+
+interface IUser{
+    _id: string;
+    name: string;
+    email: string;
+    password: string;
+    role: ["Student"|"Instructor"|"Admin"];
+    avatar: string;
+    courses_id: [string]
+ }
+
 export const UserCreate: React.FC<IResourceComponentsProps> = () => {
     const { formProps, saveButtonProps, queryResult } = useForm();
 
-    const { selectProps: courseSelectProps } = useSelect({
+    const { selectProps: courseSelectProps } = useSelect<ICourse, HttpError>
+    ({
         resource: "courses",
     });
 
@@ -37,11 +62,38 @@ export const UserCreate: React.FC<IResourceComponentsProps> = () => {
                     <Input />
                 </Form.Item>
                 <Form.Item
-                    label="User Role"
-                    name={["userRole"]}
+                    label="Password"
+                    name={["password"]}
                     rules={[
                         {
                             required: true,
+                            pattern: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}$/,
+                        },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
+                <Form.Item
+                    label="Password (confirm)"
+                    name={["password2"]}
+                    rules={[
+                        {
+                            required: true,
+                        },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
+                <Form.Item
+                    label="User Role"
+                    name={["userRole"]}
+                    initialValue="Student"
+                    rules={[
+                        {
+                            required: true,
+                        },
+                        {
+                            enum: ["Student","Instructor","Admin"]
                         },
                     ]}
                 >
@@ -57,7 +109,7 @@ export const UserCreate: React.FC<IResourceComponentsProps> = () => {
                         noStyle
                         rules={[
                             {
-                                required: true,
+                                required: false,
                             },
                         ]}
                     >
@@ -76,7 +128,7 @@ export const UserCreate: React.FC<IResourceComponentsProps> = () => {
                     name={"courses_id"}
                     rules={[
                         {
-                            required: true,
+                            required: false,
                         },
                     ]}
                     getValueProps={(value: any[]) => {

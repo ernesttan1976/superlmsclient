@@ -15,7 +15,7 @@ export const CourseList: React.FC<IResourceComponentsProps> = () => {
     const { tableProps } = useTable({
         syncWithLocation: true,
     });
-
+    
     return (
         <List>
             <Table {...tableProps} rowKey="_id">
