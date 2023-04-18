@@ -13,9 +13,9 @@ export const Login: React.FC = () => {
             }}
         >
             <div style={{ height: "100vh", display: "flex" }}>
-                <div style={{ maxWidth: "200px", margin: "auto" }}>
+                <div style={{ maxWidth: "300px", margin: "auto" }}>
                     <div style={{ marginBottom: "28px" }}>
-                        <img src={logo} alt="Refine" />
+                        <img src={logo} alt="Logo" style={{ maxWidth: "300px", borderRadius: "10px"}}/>
                     </div>
                     <Button
                         type="primary"

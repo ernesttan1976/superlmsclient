@@ -42,8 +42,8 @@ import CourseEdit from "./courses/edit"
 
 // import { InferField } from "@refinedev/inferencer/antd";
 
-import { ThemedLayout } from "components/themedLayout";
-import { ShopThemedLayout } from "pages/shop/index";
+import ThemedLayout from "components/themedLayout/index";
+import ShopThemedLayout from "pages/shop/index";
 import ShopContent from "pages/shop/shop";
 
 // dataProvider={dataProvider("https://api.fake-rest.refine.dev")}
