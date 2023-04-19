@@ -1,7 +1,7 @@
 import React from "react";
 import { IResourceComponentsProps, BaseRecord } from "@refinedev/core";
 
-export const ShopContent = () => {
+export const ShopPage = () => {
 
     
     return (
@@ -9,4 +9,4 @@ export const ShopContent = () => {
     );
 };
 
-export default ShopContent;
+export default ShopPage;

@@ -15,10 +15,28 @@ export const CourseList: React.FC<IResourceComponentsProps> = () => {
     const { tableProps } = useTable({
         syncWithLocation: true,
     });
-    
+
     return (
         <List>
             <Table {...tableProps} rowKey="_id">
+                <Table.Column
+                    title="Actions"
+                    dataIndex="actions"
+                    render={(_, record: BaseRecord) => (
+                        <Space>
+                            <EditButton
+                                hideText
+                                size="small"
+                                recordItemId={record._id}
+                            />
+                            <ShowButton
+                                hideText
+                                size="small"
+                                recordItemId={record._id}
+                            />
+                        </Space>
+                    )}
+                />
                 <Table.Column dataIndex="title" title="Title" />
                 <Table.Column dataIndex="description" title="Description" />
                 <Table.Column
@@ -81,24 +99,7 @@ export const CourseList: React.FC<IResourceComponentsProps> = () => {
                     title="Updated At"
                     render={(value: any) => <DateField value={value} />}
                 />
-                <Table.Column
-                    title="Actions"
-                    dataIndex="actions"
-                    render={(_, record: BaseRecord) => (
-                        <Space>
-                            <EditButton
-                                hideText
-                                size="small"
-                                recordItemId={record._id}
-                            />
-                            <ShowButton
-                                hideText
-                                size="small"
-                                recordItemId={record._id}
-                            />
-                        </Space>
-                    )}
-                />
+
             </Table>
         </List>
     );

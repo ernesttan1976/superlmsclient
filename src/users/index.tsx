@@ -27,10 +27,29 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
             enabled: !!tableProps?.dataSource,
         },
     });
+    console.dir(courseData)
 
     return (
         <List>
             <Table {...tableProps} rowKey="_id">
+                <Table.Column
+                    title="Actions"
+                    dataIndex="actions"
+                    render={(_, record: BaseRecord) => (
+                        <Space>
+                            <EditButton
+                                hideText
+                                size="small"
+                                recordItemId={record.id}
+                            />
+                            <ShowButton
+                                hideText
+                                size="small"
+                                recordItemId={record.id}
+                            />
+                        </Space>
+                    )}
+                />
                 <Table.Column dataIndex="name" title="Name" />
                 <Table.Column
                     dataIndex={["email"]}
@@ -81,25 +100,6 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                     dataIndex={["updated_at"]}
                     title="Updated At"
                     render={(value: any) => <DateField value={value} />}
-                />
-                <Table.Column dataIndex="__v" title="  V" />
-                <Table.Column
-                    title="Actions"
-                    dataIndex="actions"
-                    render={(_, record: BaseRecord) => (
-                        <Space>
-                            <EditButton
-                                hideText
-                                size="small"
-                                recordItemId={record.id}
-                            />
-                            <ShowButton
-                                hideText
-                                size="small"
-                                recordItemId={record.id}
-                            />
-                        </Space>
-                    )}
                 />
             </Table>
         </List>

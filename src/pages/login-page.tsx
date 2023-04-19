@@ -1,8 +1,8 @@
 import { Layout, Button } from "antd";
 import { useAuth0 } from "@auth0/auth0-react";
-import logo from "./SuperLMSLogoMedium.png";
+import logo from "./logomedium.png";
 
-export const Login: React.FC = () => {
+export const LoginPage: React.FC = () => {
     const { loginWithRedirect } = useAuth0();
 
     return (
@@ -31,4 +31,4 @@ export const Login: React.FC = () => {
     );
 };
 
-export default Login;
+export default LoginPage;

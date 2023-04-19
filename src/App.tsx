@@ -20,8 +20,6 @@ import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 import { ColorModeContextProvider } from "./contexts/color-mode";
 
-import Login from "./pages/login"
-
 import BlogPostList from "./blog-posts"
 import BlogPostCreate from "./blog-posts/create/index"
 import BlogPostShow from "./blog-posts/show/[id]"
@@ -42,26 +40,14 @@ import CourseEdit from "./courses/edit"
 
 // import { InferField } from "@refinedev/inferencer/antd";
 
-import ThemedLayout from "components/themedLayout/index";
-import ShopThemedLayout from "pages/shop/index";
-import ShopContent from "pages/shop/shop";
-
-// dataProvider={dataProvider("https://api.fake-rest.refine.dev")}
-//   if (field.key === "size") {
-//     return false;
-//   }
-//     return field;
-//  }
+import ThemedLayout from "components/themedLayout";
+import LoginPage from "./pages/login-page"
+import ShopPage from "pages/shop-page";
+import CourseDetailPage from "pages/course-detail-page";
 
 const App: React.FC = () => {
 
-  // const coursesTransformer = (field: InferField) => {
-  //   console.log(field.key);
-  //   return field;
-  // }
-
   const { isLoading, user, logout, getIdTokenClaims } = useAuth0();
-  //isAuthenticated
 
   if (isLoading) {
     return <span>loading...</span>;
@@ -89,7 +75,7 @@ const App: React.FC = () => {
           console.log("authenticated")
           return {
             authenticated: true,
-            redirectTo: "/courses",
+            redirectTo: "/dashboard/courses",
           };
         } else {
           return {
@@ -199,16 +185,16 @@ const App: React.FC = () => {
             <Routes>
               <Route path="/"
                 element={
-                  <ShopThemedLayout>
+                  <ThemedLayout>
                     <Outlet />
-                  </ShopThemedLayout>
+                  </ThemedLayout>
                 }
               >
-                <Route path="/" element={<ShopContent />} />
+                <Route path="/" element={<ShopPage />} />
+                <Route path="/courses/:slug" element={<CourseDetailPage />} />
+                <Route path="/login" element={<LoginPage />} />
               </Route>
-            </Routes>
-
-            <Routes>
+              
               <Route path="/dashboard"
                 element={
                   <Authenticated fallback={<CatchAllNavigate to="/login" />}>
@@ -264,6 +250,7 @@ const App: React.FC = () => {
                     element={<BlogPostEdit />}
                   />
                 </Route>
+
                 <Route path="/dashboard/categories">
                   <Route index element={<CategoryList />} />
                   <Route
@@ -271,6 +258,7 @@ const App: React.FC = () => {
                     element={<CategoryShow />}
                   />
                 </Route>
+
               </Route>
 
               <Route
@@ -280,21 +268,16 @@ const App: React.FC = () => {
                   </Authenticated>
                 }
               >
-                <Route path="/login" element={<Login />} />
+                <Route path="/login" element={<LoginPage />} />
               </Route>
-
-
-
+              
               <Route
                 element={
                   <Authenticated>
-                    <ThemedLayout>
-                      <Outlet />
-                    </ThemedLayout>
+                    <NavigateToResource />
                   </Authenticated>
-                }
-              >
-                <Route path="*" element={<ErrorComponent />} />
+                }>
+                  <Route path="*" element={<ErrorComponent />} />
               </Route>
             </Routes>
             <RefineKbar />

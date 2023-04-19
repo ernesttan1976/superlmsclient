@@ -1,6 +1,7 @@
 import React from "react";
-import { ThemedHeader as DefaultHeader } from "./header";
 import { ThemedSider as DefaultSider } from "./sider";
+import { ThemedHeader as DefaultHeader } from "./header";
+import { ThemedTitle as DefaultTitle } from "./title";
 import { Grid, Layout as AntdLayout } from "antd";
 import type { RefineThemedLayoutProps } from "@refinedev/antd";
 
@@ -15,11 +16,12 @@ export const ThemedLayout: React.FC<RefineThemedLayoutProps> = ({
   const breakpoint = Grid.useBreakpoint();
   const SiderToRender = Sider ?? DefaultSider;
   const HeaderToRender = Header ?? DefaultHeader;
+  const TitleToRender = Title ?? DefaultTitle;
   const isSmall = typeof breakpoint.sm === "undefined" ? true : breakpoint.sm;
 
   return (
     <AntdLayout style={{ minHeight: "100vh" }}>
-      <SiderToRender Title={Title} />
+      <SiderToRender Title={TitleToRender} />
       <AntdLayout>
         <HeaderToRender />
         <AntdLayout.Content>

@@ -2,13 +2,16 @@ import React from "react";
 import { useRouterContext, useRouterType, useLink } from "@refinedev/core";
 import { Typography, theme, Space } from "antd";
 import type { RefineLayoutThemedTitleProps } from "@refinedev/antd";
-import Logo from "../../pages/SuperLMSLogoSmall.png"
+import image_url from "../../pages/logosmall.png"
 
 const { useToken } = theme;
 
-const defaultText = "refine Project";
+const defaultText = "Super LMS";
 
-const defaultIcon = <Logo />;
+const defaultIcon = <img src={image_url} alt="SuperLMS" style={{
+  width: "24px",
+  height: "24px",
+}}/>;
 
 export const ThemedTitle: React.FC<RefineLayoutThemedTitleProps> = ({
   collapsed,
