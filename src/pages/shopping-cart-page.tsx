@@ -3,7 +3,7 @@ import { IResourceComponentsProps, BaseRecord } from "@refinedev/core";
 import { useParsed } from "@refinedev/core";
 // import slugify from "slugify";
 
-export const CourseDetailPage = () => {
+export const ShoppingCartPage = () => {
 
     const {
         resource,
@@ -14,8 +14,8 @@ export const CourseDetailPage = () => {
     } = useParsed();
     
     return (
-        <h1>Course Detail Page {params?.slug}</h1>
+        <h1>Shopping Cart Page {params?.slug}</h1>
     );
 };
 
-export default CourseDetailPage;
+export default ShoppingCartPage;

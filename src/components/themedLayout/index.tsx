@@ -20,7 +20,7 @@ export const ThemedLayout: React.FC<RefineThemedLayoutProps> = ({
   const isSmall = typeof breakpoint.sm === "undefined" ? true : breakpoint.sm;
 
   return (
-    <AntdLayout style={{ minHeight: "100vh" }}>
+    <AntdLayout style={{ minHeight: "100vh"}}>
       <SiderToRender Title={TitleToRender} />
       <AntdLayout>
         <HeaderToRender />
@@ -28,7 +28,7 @@ export const ThemedLayout: React.FC<RefineThemedLayoutProps> = ({
           <div
             style={{
               minHeight: 360,
-              padding: isSmall ? 24 : 12,
+              padding: 0 
             }}
           >
             {children}

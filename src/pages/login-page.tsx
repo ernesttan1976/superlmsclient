@@ -9,7 +9,10 @@ export const LoginPage: React.FC = () => {
         <Layout
             style={{
                 background: `radial-gradient(50% 50% at 50% 50%, #63386A 0%, #310438 100%)`,
-                backgroundSize: "cover",
+                backgroundSize: "105% 105%",
+                margin: 0,
+                padding: 0,
+
             }}
         >
             <div style={{ height: "100vh", display: "flex" }}>

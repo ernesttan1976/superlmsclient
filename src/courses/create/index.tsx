@@ -1,8 +1,12 @@
 import React from "react";
+import {useState} from 'react';
 import { IResourceComponentsProps, useApiUrl, useList } from "@refinedev/core";
 import { Create, useForm, getValueFromEvent, useSelect } from "@refinedev/antd";
 import { Form, Input, DatePicker, Avatar, Upload, Select } from "antd";
 import dayjs from "dayjs";
+import axios from 'axios';
+import { RcFile } from 'rc-upload/lib/interface';
+import { UploadRequestOption } from 'rc-upload/lib/interface';
 
 interface IInstructors {
     _id: string;
@@ -11,7 +15,7 @@ interface IInstructors {
 
 export const CourseCreate: React.FC<IResourceComponentsProps> = () => {
     const { formProps, saveButtonProps, queryResult } = useForm();
-
+    const [imageUrl, setImageUrl] = useState<string>("");
     const { data, isLoading, isError } = useList<IInstructors>({
         resource: "users",
         filters: [
@@ -36,6 +40,9 @@ export const CourseCreate: React.FC<IResourceComponentsProps> = () => {
 
 
     const apiUrl = useApiUrl();
+
+     
+      
     return (
         <Create saveButtonProps={saveButtonProps}>
             <Form {...formProps} layout="vertical">
@@ -81,7 +88,6 @@ export const CourseCreate: React.FC<IResourceComponentsProps> = () => {
                         </Upload.Dragger>
                     </Form.Item>
                 </Form.Item>
-                <Avatar size={64} src={['image']} />
 
                 <Form.Item
                     label="Start Date"

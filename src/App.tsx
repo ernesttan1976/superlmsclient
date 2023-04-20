@@ -42,8 +42,9 @@ import CourseEdit from "./courses/edit"
 
 import ThemedLayout from "components/themedLayout";
 import LoginPage from "./pages/login-page"
-import ShopPage from "pages/shop-page";
-import CourseDetailPage from "pages/course-detail-page";
+import ShopPage from "./pages/shop-page";
+import CoursePreviewPage from "./pages/course-preview-page";
+import CourseContentPage from "./pages/course-content-page";
 
 const App: React.FC = () => {
 
@@ -191,7 +192,8 @@ const App: React.FC = () => {
                 }
               >
                 <Route path="/" element={<ShopPage />} />
-                <Route path="/courses/:slug" element={<CourseDetailPage />} />
+                <Route path="/courses/preview/:id" element={<CoursePreviewPage />} />
+                <Route path="/courses/content/:id" element={<CourseContentPage />} />
                 <Route path="/login" element={<LoginPage />} />
               </Route>
               

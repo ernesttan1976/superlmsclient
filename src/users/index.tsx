@@ -27,7 +27,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
             enabled: !!tableProps?.dataSource,
         },
     });
-    console.dir(courseData)
+
 
     return (
         <List>
