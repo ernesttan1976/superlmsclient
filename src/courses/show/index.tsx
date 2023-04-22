@@ -7,9 +7,10 @@ import {
     ImageField,
     DateField,
 } from "@refinedev/antd";
-import { Typography, Row, Col } from "antd";
+import { Typography, Row, Col, Space } from "antd";
 import { LessonEdit } from "./lessonEdit";
-import Demo from "./demo"
+// import Demo from "./demo"
+import DraggableTable from "./draggableTable";
 
 const { Title } = Typography;
 
@@ -28,23 +29,40 @@ export const CourseShow: React.FC<IResourceComponentsProps> = () => {
         <>
             <Show isLoading={isLoading}>
                 <Row>
-                    <Col xs={6}>
-                        <Title level={5}>Title</Title>
-                        <TextField value={course?.title} />
-                        <Title level={5}>Description</Title>
-                        <TextField value={course?.description} />
-                        <Title level={5}>Image</Title>
-                        <ImageField style={{ maxWidth: "400px" }} value={course?.image} />
-                        <Title level={5}>Start Date</Title>
-                        <DateField value={course?.startDate} />
-                        <Title level={5}>End Date</Title>
-                        <DateField value={course?.endDate} />
+                    <Col xs={24} style={{ margin: 48 }}>
+                        <Space size="large" direction="horizontal" align="start">
+                            <Space>
+                                <ImageField style={{ maxWidth: "400px" }} value={course?.image} />
+                            </Space>
+                            <Space direction="vertical">
+                                <Space align="baseline">
+                                    <Title level={5}>Title</Title>
+                                    <TextField value={course?.title} />
+                                </Space>
+                                <Space align="baseline">
+                                    <Title level={5}>Description</Title>
+                                    <TextField value={course?.description} />
+                                </Space>
+                            </Space>
+                            <Space direction="vertical">
+                                <Space align="baseline">
+                                    <Title level={5}>Start Date</Title>
+                                    <DateField value={course?.startDate} />
+                                </Space>
+                                <Space align="baseline">
+                                    <Title level={5}>End Date</Title>
+                                    <DateField value={course?.endDate} />
+                                </Space>
+                            </Space>
+                        </Space>
                     </Col>
-                    <Col xs={6}>
-                        <Demo />
-                    </Col>
-                    <Col xs={12}>
+                    <Col xs={18}>
                         <LessonEdit />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col xs={24}>
+                        <DraggableTable />
                     </Col>
                 </Row>
 
