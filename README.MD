@@ -61,3 +61,46 @@ For Admin:
 - As an admin, I want to be able to configure and customize the platform settings, such as the branding and the payment options.
   - not required 
 
+
+
+
+## Important Information
+Refine framework uses hooks based on an extended version of Tanstack Query. Understanding of how Tanstack query works is important for building the app. "useQuery" is a generic fetching and caching hook which uses a unique caching identifier called the "queryKey".
+
+## Supported Hooks
+[https://refine.dev/docs/api-reference/core/providers/data-provider/](https://refine.dev/docs/api-reference/core/providers/data-provider/)
+
+### refine will consume:
+
+1. getList method using the [useList](https://refine.dev/docs/api-reference/core/hooks/data/useList/) or [useInfiniteList](https://refine.dev/docs/api-reference/core/hooks/data/useInfiniteList/) data hook.
+2. create method using the [useCreate](https://refine.dev/docs/api-reference/core/hooks/data/useCreate/) data hook.
+3. update method using the [useUpdate](https://refine.dev/docs/api-reference/core/hooks/data/useUpdate/) data hook.
+4. deleteOne method using the [useDeleteOne](https://refine.dev/docs/api-reference/core/hooks/data/useDelete/) data hook.
+5. getOne method using the [useOne](https://refine.dev/docs/api-reference/core/hooks/data/useOne/) data hook.
+<!-- 6. getApiUrl method using the useApiUrl data hook.
+7. custom method using the useCustom data hook.
+8. getMany method using the useMany data hook.
+9. createMany method using the useCreateMany data hook.
+10. deleteMany method using the useDeleteMany data hook.
+11. updateMany method using the useUpdateMany data hook. -->
+
+
+### useList is an extended version of Tanstack Query's useQuery hook.
+
+### RETURNS of useQuery hook
+ >Frequently used: 
+ >1. **data**
+ >2. **error**
+ >3. **status** (loading|success|error)
+ >4. **fetchStatus** (idle|fetching|loading|paused)
+ >5. **isPreviousData**
+
+### OPTIONS of useQuery hook
+ >Frequently used:  
+ >1. **queryKey** array of ['items', id], that uniquely identifies the data in the cache ***(note that queryKey is not directly defined in the useList hook)***
+ >2. **queryFn** calls the fetch functions ***(note that the data provider that performs the fetch is called by useList based on it is a "List" and the resource = "items" )***
+ >3. **enabled** (important) true to run this query, useful to run subqueries when the main query has valid data
+ >4. **onSuccess** further actions
+ >5. **keepPreviousData** for paginated pages, when moving off the current record, to prevent the loading state being shown [see here](https://tanstack.com/query/v4/docs/react/guides/paginated-queries)
+ >6. **Staletime ** 
+ >defaultOptions: {queries: {staleTime: X}} Tanstack query will make the data stale after X ms, and auto-refetch.

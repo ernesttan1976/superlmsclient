@@ -1,6 +1,7 @@
 import React from "react";
-import { IResourceComponentsProps, useApiUrl, useList } from "@refinedev/core";
-import { Edit, useForm, getValueFromEvent, useSelect } from "@refinedev/antd";
+import {useState} from 'react';
+import {IResourceComponentsProps, useApiUrl, useList, useSelect } from "@refinedev/core";
+import {Edit, useForm, getValueFromEvent} from "@refinedev/antd";
 import { Form, Input, DatePicker, Avatar, Upload, Select, Badge} from "antd";
 import dayjs from "dayjs";
 
@@ -9,10 +10,21 @@ interface IInstructors {
     name: string;
 }
 
-export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
-    const { formProps, saveButtonProps, queryResult } = useForm();
+interface IOptions {
+    label: string;
+    value: number;
+}
 
-    const { data, isLoading, isError } = useList<IInstructors>({
+
+export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
+    const formObject = useForm();
+    const { formProps, saveButtonProps, queryResult } = formObject
+    const apiUrl = useApiUrl();
+    const [imageUrl, setImageUrl] = useState<string>("");
+
+    const lessons = queryResult?.data?.data.lessons_id;
+
+    const instructorsQuery = useList<IInstructors>({
         resource: "users",
         filters: [
             {
@@ -22,21 +34,13 @@ export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
             },
         ],
     });
+    const { data, isLoading, isError, error } = instructorsQuery;
 
-    const options = data?.data.map((item) => ({
+    const options = data?.data.map((item: IInstructors) => ({
         label: item.name,
         value: item._id,
     }));
 
-    const { selectProps } = useSelect({
-        name: ["instructor_id"],
-        rules: [{ required: true }],
-        options,
-    });
-
-
-    const apiUrl = useApiUrl();
-    const coursesData = queryResult?.data?.data;
     return (
         <Edit saveButtonProps={saveButtonProps}>
             <Form {...formProps} layout="vertical">
@@ -116,7 +120,9 @@ export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
                 >
                     <DatePicker />
                 </Form.Item>
-                <Form.Item label="Instructor" {...selectProps}>
+                {instructorsQuery.isLoading ? <div>Loading...</div> :
+                instructorsQuery.isError ? <div>Something went wrong! {instructorsQuery.error.message} </div> :
+                <Form.Item label="Instructor">
                     <Select
                         placeholder="Select Instructor"
                         style={{ width: 200 }}
@@ -127,8 +133,8 @@ export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
                             </Select.Option>
                         ))}
                     </Select>
-                </Form.Item>
-                <>
+                </Form.Item>}
+                {/* <>
                     {(coursesData?.lessons_id as any[])?.map((item, index) => (
                         <Form.Item
                             key={index}
@@ -138,7 +144,7 @@ export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
                             <Input type="text" />
                         </Form.Item>
                     ))}
-                </>
+                </> */}
             </Form>
         </Edit>
     );

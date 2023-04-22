@@ -7,33 +7,49 @@ import {
     ImageField,
     DateField,
 } from "@refinedev/antd";
-import { Typography } from "antd";
+import { Typography, Row, Col } from "antd";
+import { LessonEdit } from "./lessonEdit";
+import Demo from "./demo"
 
 const { Title } = Typography;
 
 export const CourseShow: React.FC<IResourceComponentsProps> = () => {
     const { queryResult } = useShow();
-    const { data, isLoading } = queryResult;
+    const { data, isLoading, isError } = queryResult;
 
-    const record = data?.data;
+    const course = data?.data;
+
+    // <Title level={5}>Lessons</Title>
+    // {record?.lessons_id?.map((item: any) => (
+    //     <TagField value={item?.title} key={item?.title} />
+    // ))}
 
     return (
-        <Show isLoading={isLoading}>
-            <Title level={5}>Title</Title>
-            <TextField value={record?.title} />
-            <Title level={5}>Description</Title>
-            <TextField value={record?.description} />
-            <Title level={5}>Image</Title>
-            <ImageField style={{ maxWidth: "400px" }} value={record?.image}/>
-            <Title level={5}>Start Date</Title>
-            <DateField value={record?.startDate} />
-            <Title level={5}>End Date</Title>
-            <DateField value={record?.endDate} />
-            <Title level={5}>Lessons</Title>
-            {record?.lessons_id?.map((item: any) => (
-                <TagField value={item?.title} key={item?.title} />
-            ))}
-        </Show>
+        <>
+            <Show isLoading={isLoading}>
+                <Row>
+                    <Col xs={6}>
+                        <Title level={5}>Title</Title>
+                        <TextField value={course?.title} />
+                        <Title level={5}>Description</Title>
+                        <TextField value={course?.description} />
+                        <Title level={5}>Image</Title>
+                        <ImageField style={{ maxWidth: "400px" }} value={course?.image} />
+                        <Title level={5}>Start Date</Title>
+                        <DateField value={course?.startDate} />
+                        <Title level={5}>End Date</Title>
+                        <DateField value={course?.endDate} />
+                    </Col>
+                    <Col xs={6}>
+                        <Demo />
+                    </Col>
+                    <Col xs={12}>
+                        <LessonEdit />
+                    </Col>
+                </Row>
+
+            </Show>
+        </>
     );
 };
 

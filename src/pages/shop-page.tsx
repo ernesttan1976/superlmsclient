@@ -2,7 +2,7 @@ import React from "react";
 import { useList, HttpError, useLink } from "@refinedev/core";
 import { useState } from "react";
 import dayjs from "dayjs";
-import { Typography, Image, Card, Row, Col, TreeSelect, Button } from "antd";
+import { Typography, Image, Card, Row, Col, TreeSelect, Button, Space } from "antd";
 import { EyeOutlined, DollarCircleOutlined, PlaySquareOutlined } from '@ant-design/icons'
 
 
@@ -45,21 +45,24 @@ interface ILesson {
 
 export const ShopPage = () => {
     const Link = useLink();
-
-    const { data, isLoading, isError } = useList<ICourse, HttpError>({
-        resource: "courses",
-    });
-
     const [value, setValue] = useState<string>();
-
-    const courses = data?.data ?? [];
-
+    //this is similar to useQuery from Tanstack Query
+    const courseList = useList<ICourse, HttpError>({
+        resource: "courses",
+        queryOptions: {
+            onSuccess: ()=>{
+                console.log('success');
+            },
+        }
+    });
+    const { data, isLoading, isError, error } = courseList;
+  
     if (isLoading) {
         return <div>Loading...</div>;
     }
 
     if (isError) {
-        return <div>Something went wrong!</div>;
+        return <div>Something went wrong! {error.message} </div>;
     }
 
 
@@ -74,44 +77,79 @@ export const ShopPage = () => {
         setValue(newValue);
     };
 
-    // const handleCardClick=(event: React.SyntheticEvent, course_id: Number)=>{
-    //     //show/:id
-    //     const key: BaseKey = course_id.toString()
-    //     show("courses", key);
-    // }
+    const courses = data?.data ?? [];
 
     return (
         <Col style={{ padding: 24 }}>
             <Title level={2}>Course Catalog</Title>
-            <Row wrap={true}>
+
+            <Space size="large" wrap={true} style={{ justifyContent: "space-around" }}>
                 {courses?.map((course) => (
                     <Col xs={24} sm={12} md={6} lg={6} xl={6} >
-                        <Card
-                            key={course._id}
-                            hoverable
-                            style={{ width: 240, height: 320 }}
-                            cover={<img alt={course.title} src={course.image} />}
-                        >
-                            <Meta title={course.title} description={course.description} />
-                            <ul>
-                                <li><Text>{`Start of Course: ${dayjs(course.startDate,).format('DD/MM/YYYY')}`}</Text></li>
-                                <li><Text>{`End of Course: ${dayjs(course.endDate).format('DD/MM/YYYY')}`}</Text></li>
-                            </ul>
-                            <Link to={`/courses/preview/${course._id}`}><Button type="primary" icon=<EyeOutlined /> >Preview</Button></Link>
+                        <Space size="large" >
+                            <Card
+                                key={course._id}
+                                hoverable
+                                style={{ width: 320, minHeight: 320, boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)" }}
+                                cover={<img alt={course.title} src={course.image} />}
+                            >
+                                <Meta title={course.title} description={course.description} />
+                                <ul>
+                                    <li><Text>{`Start of Course: ${dayjs(course.startDate,).format('DD/MM/YYYY')}`}</Text></li>
+                                    <li><Text>{`End of Course: ${dayjs(course.endDate).format('DD/MM/YYYY')}`}</Text></li>
+                                </ul>
+                                <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+                                    <Row>
+                                        <Space>
+                                            <Link to={`/courses/preview/${course._id}`}><Button style={{ width: 100 }} type="primary" icon=<EyeOutlined /> >Preview</Button></Link>
+                                            <Button style={{ width: 165 }} type="primary" icon=<DollarCircleOutlined /> >Add to Cart ${course.price}</Button>
+                                        </Space>
+                                    </Row>
+                                    <Link to='/cart'>
+                                        <Link to={`/courses/content/${course._id}`}>
+                                            <Button style={{ width: 273 }} type="primary" icon=<PlaySquareOutlined /> >Learn</Button>
+                                        </Link>
 
-                            <Link to='/cart'>
-                                <Button type="primary" icon=<DollarCircleOutlined /> >Add to Cart ${course.price}</Button>
-                            </Link>
-
-                            <Link to={`/courses/content/${course._id}`}>
-                                <Button type="primary" icon=<PlaySquareOutlined /> >Learn</Button>
-                            </Link>
-
-                        </Card>
+                                    </Link>
+                                </Space>
+                            </Card>
+                        </Space>
                     </Col>
                 ))}
-            </Row>
+                {courses?.map((course) => (
+                    <Col xs={24} sm={12} md={6} lg={6} xl={6} >
+                        <Space size="large" >
+                            <Card
+                                key={course._id}
+                                hoverable
+                                style={{ width: 320, minHeight: 320, boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)" }}
+                                cover={<img alt={course.title} src={course.image} />}
+                            >
+                                <Meta title={course.title} description={course.description} />
+                                <ul>
+                                    <li><Text>{`Start of Course: ${dayjs(course.startDate,).format('DD/MM/YYYY')}`}</Text></li>
+                                    <li><Text>{`End of Course: ${dayjs(course.endDate).format('DD/MM/YYYY')}`}</Text></li>
+                                </ul>
+                                <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+                                    <Row>
+                                        <Space>
+                                            <Link to={`/courses/preview/${course._id}`}><Button style={{ width: 100 }} type="primary" icon=<EyeOutlined /> >Preview</Button></Link>
+                                            <Button style={{ width: 165 }} type="primary" icon=<DollarCircleOutlined /> >Add to Cart ${course.price}</Button>
+                                        </Space>
+                                    </Row>
+                                    <Link to='/cart'>
+                                        <Link to={`/courses/content/${course._id}`}>
+                                            <Button style={{ width: 273 }} type="primary" icon=<PlaySquareOutlined /> >Learn</Button>
+                                        </Link>
 
+                                    </Link>
+                                </Space>
+                            </Card>
+                        </Space>
+                    </Col>
+                ))}
+
+            </Space>
         </Col>
     );
 };

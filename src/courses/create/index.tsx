@@ -1,7 +1,7 @@
 import React from "react";
 import {useState} from 'react';
 import { IResourceComponentsProps, useApiUrl, useList } from "@refinedev/core";
-import { Create, useForm, getValueFromEvent, useSelect } from "@refinedev/antd";
+import { Create, useForm, getValueFromEvent} from "@refinedev/antd";
 import { Form, Input, DatePicker, Avatar, Upload, Select } from "antd";
 import dayjs from "dayjs";
 import axios from 'axios';
@@ -13,10 +13,16 @@ interface IInstructors {
     name: string;
 }
 
+interface IOptions {
+    label: string;
+    value: number;
+}
+
 export const CourseCreate: React.FC<IResourceComponentsProps> = () => {
     const { formProps, saveButtonProps, queryResult } = useForm();
+    const apiUrl = useApiUrl();
     const [imageUrl, setImageUrl] = useState<string>("");
-    const { data, isLoading, isError } = useList<IInstructors>({
+    const instructorsList = useList<IInstructors>({
         resource: "users",
         filters: [
             {
@@ -26,23 +32,13 @@ export const CourseCreate: React.FC<IResourceComponentsProps> = () => {
             },
         ],
     });
+    const { data, isLoading, isError, error } = instructorsList;
 
-    const options = data?.data.map((item) => ({
+    const  options = data?.data.map((item: IInstructors) => ({
         label: item.name,
         value: item._id,
-    }));
+    }))
 
-    const { selectProps } = useSelect({
-        name: ["instructor_id"],
-        rules: [{ required: true }],
-        options,
-    });
-
-
-    const apiUrl = useApiUrl();
-
-     
-      
     return (
         <Create saveButtonProps={saveButtonProps}>
             <Form {...formProps} layout="vertical">
@@ -117,7 +113,9 @@ export const CourseCreate: React.FC<IResourceComponentsProps> = () => {
                 >
                     <DatePicker />
                 </Form.Item>
-                <Form.Item label="Instructor" {...selectProps}>
+                {instructorsList.isLoading ? <div>Loading...</div> :
+                instructorsList.isError ? <div>Something went wrong! {instructorsList.error.message} </div> :
+                <Form.Item label="Instructor" >
                     <Select
                         placeholder="Select Instructor"
                         style={{ width: 200 }}
@@ -128,7 +126,7 @@ export const CourseCreate: React.FC<IResourceComponentsProps> = () => {
                             </Select.Option>
                         ))}
                     </Select>
-                </Form.Item>
+                </Form.Item>}
             </Form>
         </Create>
     );

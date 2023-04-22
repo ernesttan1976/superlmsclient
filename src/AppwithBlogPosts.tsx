@@ -23,6 +23,14 @@ import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 import { ColorModeContextProvider } from "./contexts/color-mode";
 
+import BlogPostList from "./blog-posts"
+import BlogPostCreate from "./blog-posts/create/index"
+import BlogPostShow from "./blog-posts/show/[id]"
+import BlogPostEdit from "./blog-posts/edit/[id]"
+
+import CategoryList from "./categories/index"
+import CategoryShow from "./categories/show/[id]"
+
 import UserList from "./users/index"
 import UserCreate from "./users/create"
 import UserShow from "./users/show"
@@ -124,8 +132,10 @@ const App: React.FC = () => {
             authProvider={authProvider}
             dataProvider={DATA_URI ? {
               default: dataProvider(DATA_URI),
+              dummy: dataProvider("https://api.fake-rest.refine.dev"),
             } : {
               default: dataProvider("https://api.fake-rest.refine.dev"),
+              dummy: dataProvider("https://api.fake-rest.refine.dev"),
             }}
             notificationProvider={notificationProvider}
             options={{
@@ -155,6 +165,25 @@ const App: React.FC = () => {
                   dataProviderName: "default",
                 },
               },
+              {
+                name: 'blog_posts',
+                list: '/dashboard/blog-posts',
+                show: '/dashboard/blog-posts/show/:id',
+                create: '/dashboard/blog-posts/create',
+                edit: '/dashboard/blog-posts/edit/:id',
+                meta: {
+                  canDelete: true,
+                  dataProviderName: "dummy",
+                },
+              },
+              {
+                name: 'categories',
+                list: '/dashboard/categories',
+                show: '/dashboard/categories/show/:id',
+                meta: {
+                  dataProviderName: "dummy",
+                },
+              },
             ]}
           >
             <Routes>
@@ -170,7 +199,7 @@ const App: React.FC = () => {
                 <Route path="/courses/content/:id" element={<CourseContentPage />} />
                 <Route path="/login" element={<LoginPage />} />
               </Route>
-
+              
               <Route path="/dashboard"
                 element={
                   <Authenticated fallback={<CatchAllNavigate to="/login" />}>
@@ -214,6 +243,27 @@ const App: React.FC = () => {
                   />
                 </Route>
 
+                <Route path="/dashboard/blog-posts">
+                  <Route index element={<BlogPostList />} />
+                  <Route
+                    path="show/:id"
+                    element={<BlogPostShow />}
+                  />
+                  <Route path="create" element={<BlogPostCreate />} />
+                  <Route
+                    path="edit/:id"
+                    element={<BlogPostEdit />}
+                  />
+                </Route>
+
+                <Route path="/dashboard/categories">
+                  <Route index element={<CategoryList />} />
+                  <Route
+                    path="show/:id"
+                    element={<CategoryShow />}
+                  />
+                </Route>
+
               </Route>
 
               <Route
@@ -225,14 +275,14 @@ const App: React.FC = () => {
               >
                 <Route path="/login" element={<LoginPage />} />
               </Route>
-
+              
               <Route
                 element={
                   <Authenticated>
                     <NavigateToResource />
                   </Authenticated>
                 }>
-                <Route path="*" element={<ErrorComponent />} />
+                  <Route path="*" element={<ErrorComponent />} />
               </Route>
             </Routes>
             <RefineKbar />
