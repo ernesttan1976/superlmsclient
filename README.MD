@@ -104,3 +104,13 @@ Refine framework uses hooks based on an extended version of Tanstack Query. Unde
  >5. **keepPreviousData** for paginated pages, when moving off the current record, to prevent the loading state being shown [see here](https://tanstack.com/query/v4/docs/react/guides/paginated-queries)
  >6. **Staletime ** 
  >defaultOptions: {queries: {staleTime: X}} Tanstack query will make the data stale after X ms, and auto-refetch.
+
+ ## useForm Hook
+ ### FormProps
+ - onFinish
+ - onValuesChange
+### FormLoading
+### SaveButtonProps
+### queryResult 
+- queryResult.data.data Contains the data
+- queryResult.data.status = "loading | error | success"

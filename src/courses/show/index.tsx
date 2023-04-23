@@ -8,9 +8,7 @@ import {
     DateField,
 } from "@refinedev/antd";
 import { Typography, Row, Col, Space } from "antd";
-import { LessonEdit } from "./lessonEdit";
-// import Demo from "./demo"
-import DraggableTable from "./draggableTable";
+// import {ICourse, IUser, ILesson, IDiscussion} from "../../models"
 
 const { Title } = Typography;
 
@@ -20,14 +18,11 @@ export const CourseShow: React.FC<IResourceComponentsProps> = () => {
 
     const course = data?.data;
 
-    // <Title level={5}>Lessons</Title>
-    // {record?.lessons_id?.map((item: any) => (
-    //     <TagField value={item?.title} key={item?.title} />
-    // ))}
-
     return (
         <>
             <Show isLoading={isLoading}>
+                <Title level={2}>Course Details: {course?.title}</Title>
+                <Title level={4}>Instructor: {course?.instructor_id.name}</Title>
                 <Row>
                     <Col xs={24} style={{ margin: 48 }}>
                         <Space size="large" direction="horizontal" align="start">
@@ -55,14 +50,6 @@ export const CourseShow: React.FC<IResourceComponentsProps> = () => {
                                 </Space>
                             </Space>
                         </Space>
-                    </Col>
-                    <Col xs={18}>
-                        <LessonEdit />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col xs={24}>
-                        <DraggableTable />
                     </Col>
                 </Row>
 

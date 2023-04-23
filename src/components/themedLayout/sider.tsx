@@ -64,7 +64,7 @@ export const ThemedSider: React.FC<RefineThemedLayoutSiderProps> = ({
   });
 
   const isMobile =
-    typeof breakpoint.lg === "undefined" ? false : !breakpoint.lg;
+    typeof breakpoint.sm === "undefined" ? false : !breakpoint.sm;
 
   const RenderToTitle = TitleFromProps ?? TitleFromContext ?? ThemedTitle;
 
@@ -202,7 +202,7 @@ export const ThemedSider: React.FC<RefineThemedLayoutSiderProps> = ({
           }}
           onClick={() => {
             setDrawerOpen(false);
-            if (!breakpoint.lg) {
+            if (!breakpoint.sm) {
               setCollapsed(true);
             }
           }}

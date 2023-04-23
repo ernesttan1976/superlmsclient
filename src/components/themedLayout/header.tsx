@@ -1,10 +1,12 @@
 import React from "react";
 import { useActiveAuthProvider, useGetIdentity } from "@refinedev/core";
-import { Layout as AntdLayout, Typography, Switch, Space, theme } from "antd";
+import { Layout as AntdLayout, Typography, Switch, Space, theme, Button, Row, Col } from "antd";
 import type { RefineThemedLayoutHeaderProps } from "@refinedev/antd";
 import Profile from "../profile"
 import { useContext } from "react";
 import { ColorModeContext } from "../../contexts/color-mode";
+import { Link } from "react-router-dom";
+import { HomeFilled, FolderOpenFilled, ShoppingFilled } from "@ant-design/icons";
 
 const { Text } = Typography;
 const { useToken } = theme;
@@ -31,21 +33,26 @@ export const ThemedHeader: React.FC<RefineThemedLayoutHeaderProps> = () => {
       style={{
         backgroundColor: token.colorBgElevated,
         display: "flex",
-        justifyContent: "flex-end",
+        justifyContent: "space-between",
         alignItems: "center",
         padding: "0px 24px",
         height: "64px",
       }}
     >
-      <Space size="large">
+        <Space>
+          <Link to="/"><Button type="primary" icon={<HomeFilled />}>Home</Button></Link>
+          <Link to="/courses/content"><Button type="primary" icon={<FolderOpenFilled />}>My Courses</Button></Link>
+          <Link to="/cart"><Button type="primary" icon={<ShoppingFilled />}>Cart</Button></Link>
+        </Space>
+        <Space>
         <Switch
-          checkedChildren="🌛"
-          unCheckedChildren="🔆"
-          onChange={() => setMode(mode === "light" ? "dark" : "light")}
-          defaultChecked={mode === "dark"}
-        />
-        <Profile />
-      </Space>
+            checkedChildren="🌛"
+            unCheckedChildren="🔆"
+            onChange={() => setMode(mode === "light" ? "dark" : "light")}
+            defaultChecked={mode === "dark"}
+          />
+          <Profile />
+          </Space>
     </AntdLayout.Header>
   );
 };

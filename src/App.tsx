@@ -12,13 +12,10 @@ import {
   CatchAllNavigate,
   UnsavedChangesNotifier,
 } from "@refinedev/react-router-v6";
-// import dataProvider from "@refinedev/simple-rest";
 import { dataProvider } from "./rest-data-provider";
 //swizzled the simple-rest api data provider
 
 import { BrowserRouter, Route, Routes, Outlet } from "react-router-dom";
-// import { AntdInferencer } from '@refinedev/inferencer/antd';
-// import { ConfigProvider } from "antd";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 import { ColorModeContextProvider } from "./contexts/color-mode";
@@ -31,15 +28,16 @@ import UserEdit from "./users/edit"
 import CourseList from "./courses/index"
 import CourseCreate from "./courses/create"
 import CourseShow from "./courses/show"
-import CourseEdit from "./courses/edit"
-
-// import { InferField } from "@refinedev/inferencer/antd";
+import CourseEdit from "./courses/edit/index"
 
 import ThemedLayout from "components/themedLayout";
 import LoginPage from "./pages/login-page"
 import ShopPage from "./pages/shop-page";
 import CoursePreviewPage from "./pages/course-preview-page";
 import CourseContentPage from "./pages/course-content-page";
+
+import { ShoppingCartProvider } from "components/shoppingCartContext";
+import ShoppingCartPage from "./pages/shopping-cart-page"
 
 const App: React.FC = () => {
 
@@ -119,6 +117,7 @@ const App: React.FC = () => {
     <BrowserRouter>
       <RefineKbarProvider>
         <ColorModeContextProvider>
+        <ShoppingCartProvider items={[]}>
           <Refine
             routerProvider={routerBindings}
             authProvider={authProvider}
@@ -168,6 +167,7 @@ const App: React.FC = () => {
                 <Route path="/" element={<ShopPage />} />
                 <Route path="/courses/preview/:id" element={<CoursePreviewPage />} />
                 <Route path="/courses/content/:id" element={<CourseContentPage />} />
+                <Route path="/cart" element={<ShoppingCartPage />} />
                 <Route path="/login" element={<LoginPage />} />
               </Route>
 
@@ -238,6 +238,7 @@ const App: React.FC = () => {
             <RefineKbar />
             <UnsavedChangesNotifier />
           </Refine>
+          </ShoppingCartProvider>
         </ColorModeContextProvider>
       </RefineKbarProvider>
     </BrowserRouter>
