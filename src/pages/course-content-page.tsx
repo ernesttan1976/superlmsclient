@@ -1,89 +1,188 @@
-import { useList, HttpError } from "@refinedev/core";
+import { useResource } from "@refinedev/core";
 import ReactPlayer from 'react-player'
 import dayjs from "dayjs";
-import { Typography } from "antd";
-const { Title } = Typography;
+import { Checkbox, Col, Collapse, Drawer, FloatButton, InputRef, List, Row, Space, Typography } from "antd";
+import { ICourse, IUser, ILesson, IDiscussion } from "../models"
+import { StarOutlined, LikeOutlined, MessageOutlined, PlaySquareOutlined, QuestionCircleOutlined, ArrowLeftOutlined } from "@ant-design/icons";
+import React, { useCallback, useRef, useState } from "react";
+import { getCourse } from "api/courses";
+import { useQuery } from "@tanstack/react-query"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import "./course-content-page.module.css"
 
+const { Title, Text } = Typography;
+const { Panel } = Collapse;
 
-interface ICourse {
-    _id: number;
-    title: string;
-    description: string;
-    image: string;
-    startDate: Date;
-    endDate: Date;
-    instructor_id: IUser;
-    students_id: [IUser];
-    lessons_id: [ILesson];
-    discussions_id: [object];
-}
+const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
+    <Space>
+        {React.createElement(icon)}
+        {text}
+    </Space>
+);
 
-interface IUser {
-    _id: number;
-    name: string;
-    email: string;
-    password: string;
-    role: string;
-    avatar: string;
-    courses_id: [number];
-}
+const queryClient = new QueryClient({
+    defaultOptions: { queries: { staleTime: 300000 } }
+});
 
-interface ILesson {
-    _id: number;
-    title: string;
-    description: string;
-    image: string;
-    video: string;
-    duration: number;
-}
 
 export const CourseContentPage = (props: any) => {
-    const {id}=props;
-    const { data, isLoading, isError } = useList<ICourse, HttpError>({
-        resource: "courses",
-        filters: [
-            {
-                field: "_id",
-                operator: "eq",
-                value: id,
-            },
-        ],
+    const { id } = useResource();
+    const [lessonIndex, setLessonIndex] = useState(0);
+    const [open, setOpen] = useState(true);
+    const [isLandscape, setIsLandscape]= useState(window.screen.orientation.type.includes("landscape"));
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+    const courseQuery = useQuery({
+        queryKey: ['courses'],
+        queryFn: () => getCourse(id),
+    })
+
+    const { status, isLoading } = courseQuery;
+
+    if (courseQuery.status === "loading") return <h1>Loading...</h1>;
+    if (courseQuery.status === "error") return <h1>{JSON.stringify(courseQuery.error)}</h1>
+
+    const course = courseQuery.data;
+
+    window.screen.orientation.addEventListener("change", function(e) {
+        setIsLandscape(window.screen.orientation.type.includes("landscape"));
     });
 
-    const courses = data?.data ?? [];
-    const course = courses[0];
-
-    if (isLoading) {
-        return <div>Loading...</div>;
+    window.onresize = ()=>{
+        setIsMobile(window.innerWidth <= 768);
     }
 
-    if (isError) {
-        return <div>Something went wrong!</div>;
+    function handlePlayVideo(lessonIndex: number) {
+        setLessonIndex(lessonIndex);
     }
 
+    function handleCheckBox() {
+        console.log('Checked')
+    }
 
-    //5d93ad92609d4c77cce4224f6119cb7a
-    //https://ernest-ga-bucket1.s3.ap-southeast-1.amazonaws.com/tourism01.jpg
+    function handleDrawerToggle() {
+        setOpen(!open)
+    }
+
+    const showDrawer = () => {
+        setOpen(true);
+    };
+
+    const onClose = () => {
+        setOpen(false);
+    };
+
+
+    //actions={[
+    //    <IconText icon={StarOutlined} text="156" key="list-vertical-star-o" />,
+    //    <IconText icon={LikeOutlined} text="156" key="list-vertical-like-o" />,
+    //    <IconText icon={MessageOutlined} text="2" key="list-vertical-message" />,
+    //]}
+
     return (
         <>
-            <Title level={2}>Course Content Page</Title>
-                <div key={course._id}>
-                    <Title level={4}>{course.title}</Title>
-                    <Title level={5}>{course.description}</Title>
-                    <img src={course.image} />
-                    <Title level={5}>{`${dayjs(course.startDate)}`}</Title>
-                    <div>
-                        {course.lessons_id.map((lesson) => (
-                            <div>
-                                <div>{lesson.title}</div>
-                                <p>{lesson.description}</p>
-                                <img src={lesson.image} />
-                                <ReactPlayer url={lesson.video} />
-                                <div>{`${lesson.duration} min`}</div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
+            <QueryClientProvider client={queryClient}>
+                <Row style={{ padding: 8, minHeight: 48, width: "100%", display: "flex", justifyContent: "start", alignItems: "center"}}>
+                    <Title style={{ margin: "auto 12px" }} level={5}>{`${course.title} > ${course.lessons_id[lessonIndex].title}`}</Title>
+                </Row>
+                <Row style={{ padding: 0 }}>
+                    <Col sm={24} >
+                    <ReactPlayer
+                        url={course.lessons_id[lessonIndex].video}
+                        controls={true}
+                        style={(isLandscape && isMobile) ? 
+                            {zIndex: 50, display: "flex", width: `${window.screen.width}`, height: `${window.screen.height}`, position: "absolute", left: 0, right: 0, top: 0, bottom: 0}
+                            : {width: "100%", minWidth: 375, maxHeight: 420}}
+                    />
+                    </Col>
+                    <Col sm={22} style={{ padding: 20}}>
+                    <Text>{course.lessons_id[lessonIndex].description}</Text>
+                    </Col>
+                </Row>
+                <FloatButton.Group shape="square"
+                    style={{ zIndex: 1000, display: "flex", top: 68, right: 0, height: 40, width: 40 }}
+
+                >
+                    <FloatButton style={{ height: 40 }}
+                        onClick={handleDrawerToggle}
+                        icon={<ArrowLeftOutlined />}
+                        description=""
+
+                    />
+                </FloatButton.Group>
+                <Drawer
+                    title="Course Content"
+                    placement="right"
+                    onClose={onClose}
+                    open={open}
+                    mask={false}
+                    width={350}
+                    maskClosable={false}
+                    height="bottom"
+                    bodyStyle={{
+                        padding: 0
+                    }}
+                >
+                    <List
+                        style={{
+                            overflowY: "scroll",
+                            height: "calc(100vh - 64px)",
+                            width: "100%",
+                            padding: 0,
+                        }}
+                        itemLayout="vertical"
+                        dataSource={course.lessons_id}
+                        size="large"
+                        bordered={true}
+                        // header={(<span>This is the list header</span>)}
+                        // footer={(<span>This is the list footer</span>)}
+                        loading={isLoading}
+                        split={true}
+                        renderItem={(lesson: ILesson, index) => (
+                            <List.Item
+                                key={lesson._id}
+                                extra={<></>}
+                                style={{ padding: 0 }}
+
+                            >
+                                <Collapse style={{ padding: 0, width: "100%" }} expandIconPosition="end" bordered={true}>
+                                    <Panel
+
+                                        key={lesson.title}
+                                        style={{ width: "100%" }}
+                                        header={
+                                            <div style={{ width: "100%", display: "flex", justifyContent: "start", alignItems: "start", padding: 0 }}>
+                                                <Checkbox style={{ marginRight: 12 }} onChange={handleCheckBox} />
+                                                <div onClick={() => handlePlayVideo(index)} style={{ width: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between", alignItems: "start" }}>
+                                                    <div><Text style={{ width: 300, margin: "0" }}>{lesson.title}</Text></div>
+                                                    <br />
+                                                    <Text style={{ width: "100%" }}><PlaySquareOutlined /><strong style={{ margin: "0 12px" }}>{`${lesson.duration} mins`}</strong></Text>
+                                                </div>
+                                            </div>}
+                                    >
+                                        <Row align="middle" >
+                                            <Col sm={10}>
+                                                <img
+                                                    width={130}
+                                                    alt="lesson image"
+                                                    src={lesson.image}
+                                                    style={{ padding: 0 }}
+                                                />
+
+                                            </Col>
+                                            <Col sm={14} style={{ padding: 8 }}>
+                                                <Text >{`${lesson.description.slice(0, 100)}...(more)`}</Text>
+                                            </Col>
+                                        </Row>
+
+                                    </Panel>
+                                </Collapse>
+
+                            </List.Item>
+                        )}
+                    />
+                </Drawer>
+        </QueryClientProvider >
         </>
     );
 };

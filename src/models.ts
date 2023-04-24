@@ -38,3 +38,9 @@ export interface IDiscussion {
     discussion: string;
     user_id: IUser;
 }
+
+export interface IItem {
+    id: number;
+    name: string;
+    price: number;
+  }

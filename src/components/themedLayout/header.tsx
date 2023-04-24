@@ -33,17 +33,17 @@ export const ThemedHeader: React.FC<RefineThemedLayoutHeaderProps> = () => {
       style={{
         backgroundColor: token.colorBgElevated,
         display: "flex",
-        justifyContent: "space-between",
+        justifyContent: "end",
         alignItems: "center",
         padding: "0px 24px",
         height: "64px",
       }}
     >
-        <Space>
+        {/* <Space>
           <Link to="/"><Button type="primary" icon={<HomeFilled />}>Home</Button></Link>
           <Link to="/courses/content"><Button type="primary" icon={<FolderOpenFilled />}>My Courses</Button></Link>
           <Link to="/cart"><Button type="primary" icon={<ShoppingFilled />}>Cart</Button></Link>
-        </Space>
+        </Space> */}
         <Space>
         <Switch
             checkedChildren="🌛"

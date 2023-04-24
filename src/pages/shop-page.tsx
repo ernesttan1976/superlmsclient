@@ -69,7 +69,7 @@ export const ShopPage = () => {
     return (
         <>
             <Col sm={24} style={{width: "100%", height: 220}}>
-            <Title level={2}>Course Catalog</Title>
+            <Title style={{padding: 8}} level={2}>Course Catalog</Title>
             <Carousel
                 className="carousel"
                 style={{height: 200}}

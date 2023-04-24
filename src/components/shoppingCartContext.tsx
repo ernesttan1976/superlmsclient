@@ -1,18 +1,14 @@
 import { Button, Col, Row, Space, Table, Typography } from "antd";
 import React, { createContext, useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import {IItem} from "../models"
+
 const { Title } = Typography;
 
-interface Item {
-  id: number;
-  name: string;
-  price: number;
-}
-
 interface ShoppingCartContextType {
-  cartItems: Item[];
-  addToCart: (item: Item) => void;
-  removeFromCart: (item: Item) => void;
+  cartItems: IItem[];
+  addToCart: (item: IItem) => void;
+  removeFromCart: (item: IItem) => void;
   getTotal: () => number;
 }
 
@@ -24,20 +20,20 @@ const ShoppingCartContext = createContext<ShoppingCartContextType>({
 });
 
 interface Props {
-  items: Item[];
+  items: IItem[];
   children: React.ReactNode;
 }
 
 const ShoppingCartProvider: React.FC<Props> = ({ items, children }) => {
-  const [cartItems, setCartItems] = useState<Item[]>([]);
+  const [cartItems, setCartItems] = useState<IItem[]>([]);
 
-  const addToCart = (item: Item) => {
+  const addToCart = (item: IItem) => {
     if (cartItems.findIndex(cartItem=>(cartItem.id===item.id))!=-1) return;
     //duplicate
     setCartItems([...cartItems, item]);
   };
 
-  const removeFromCart = (item: Item) => {
+  const removeFromCart = (item: IItem) => {
     const newCartItems = cartItems.filter((cartItem) => cartItem.id !== item.id);
     setCartItems(newCartItems);
   };
@@ -64,7 +60,7 @@ const ShoppingCart: React.FC = () => {
     title: "No",
     dataIndex: "id",
     key: "id",
-    render: (_: any, record: Item) => (<Link to={`/courses/preview/${record.id}`}><Button type="primary">View</Button></Link>)
+    render: (_: any, record: IItem) => (<Link to={`/courses/preview/${record.id}`}><Button type="primary">View</Button></Link>)
   }, 
   {
     title: "Item",
@@ -75,7 +71,7 @@ const ShoppingCart: React.FC = () => {
     title: "Price",
     dataIndex: "price",
     key: "price",
-    render: (_: any, record: Item) => (
+    render: (_: any, record: IItem) => (
       `$${record.price}`
     )
   },
@@ -83,7 +79,7 @@ const ShoppingCart: React.FC = () => {
     title: "Actions",
     dataIndex: "actions",
     key: "actions",
-    render: (_: any, record: Item) => (
+    render: (_: any, record: IItem) => (
       <Button type="primary" onClick={() => removeFromCart(record)}>Remove from cart</Button>
     )
   }]
