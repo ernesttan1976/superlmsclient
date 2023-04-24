@@ -1,13 +1,18 @@
 import React from "react";
 import { useState, useEffect, useRef, RefObject } from 'react';
-import { IResourceComponentsProps, useApiUrl, useList, useSelect, useUpdate } from "@refinedev/core";
-import { TextField, ImageField, DateField, Edit, useForm } from "@refinedev/antd";
+import { IResourceComponentsProps, useApiUrl, useList, useNotification, useSelect, useUpdate } from "@refinedev/core";
+import { TextField, ImageField, DateField, Edit, useForm, getValueFromEvent } from "@refinedev/antd";
 import { Typography, Row, Col, Space, Card, Form, Input, Select, InputRef, RefSelectProps, DatePicker, Avatar, Upload, Badge, Image, Button, Breadcrumb } from "antd";
 import DraggableTable from "./draggableTable";
-import { ICourse, IUser, ILesson, IDiscussion } from "../../models"
+import { ICourse, IUser, ILesson, IDiscussion, IInstructors, IOptions } from "../../models"
 import Meta from "antd/es/card/Meta";
 import ReactPlayer from "react-player";
 import "./edit.module.css"
+import { useInvalidate } from "@refinedev/core";
+import axios from 'axios';
+import { RcFile } from 'rc-upload/lib/interface';
+import { UploadRequestOption } from 'rc-upload/lib/interface';
+import dayjs from "dayjs";
 
 const { Title } = Typography;
 
@@ -32,6 +37,28 @@ export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
 
     const [lessons, setLessons] = useState<ILesson[]>([]);
     const [lessonIndex, setLessonIndex] = useState<number>(0);
+    const updateQuery = useUpdate();
+    const { open, close } = useNotification();
+    const invalidate = useInvalidate();
+    const instructorsList = useList<IInstructors>({
+        resource: "users",
+        filters: [
+            {
+                field: "role",
+                operator: "eq",
+                value: "Instructor",
+            },
+        ],
+    });
+    const { data, isLoading, isError, error } = instructorsList;
+
+    const options = data?.data.map((item: IInstructors) => ({
+        label: item.name,
+        value: item._id,
+    }))
+
+
+    const { mutate } = updateQuery
 
     useEffect(() => {
         setLessons(queryResult?.data?.data.lessons_id ?? []);
@@ -41,15 +68,65 @@ export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
     if (!queryResult) return <Title level={2}>Loading...</Title>
     const course = queryResult?.data?.data;
 
-    // const { mutate } = useUpdate();
-    // mutate({
-    //     resource: "products",
-    //     values: {
-    //         name: "New Product",
-    //         material: "Wood",
-    //     },
-    //     id: 1,
-    // });
+    if (!course) return <h2>Loading...</h2>
+
+
+    function handleNewLesson() {
+        //create one with placeholder values
+        //set lesson index to the last one
+
+        const newLessons = [];
+        for (let i = 0; i < lessons.length; i++) {
+            newLessons.push(null);
+        }
+        newLessons.push(
+            {
+                title: "Title",
+            }
+        )
+        console.log([...newLessons])
+
+        if (!course) {
+            open?.({
+                type: "error",
+                message: "Error",
+                description: "Error course undefined",
+            })
+            return
+        }
+
+        mutate(
+            {
+                resource: "courses",
+                values: {
+                    lessons_id: [...newLessons],
+                },
+                id: course._id,
+            },
+            {
+                onError: (error, variables, context) => {
+                    // An error occurred!
+                    open?.({
+                        type: "error",
+                        message: "Error",
+                        description: error.message,
+                    })
+                },
+                onSuccess: (data, variables, context) => {
+                    // Let's celebrate!
+                    open?.({
+                        type: "success",
+                        message: "Success",
+                        description: `Updated Course with New Lesson`,
+                    })
+                    invalidate({
+                        resource: "courses",
+                        invalidates: ["all"],
+                    });
+                    setLessonIndex(lessons.length)
+                },
+            });
+    }
 
     function handleSelectChange(value: number) {
         setLessonIndex(value)
@@ -91,22 +168,109 @@ export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
                         </Col>
                     </Row>
 
+                    <Form.Item
+                        label="Title"
+                        name={["title"]}
+                        rules={[
+                            {
+                                required: true,
+                            },
+                        ]}
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item
+                        label="Description"
+                        name={["description"]}
+                        rules={[
+                            {
+                                required: true,
+                            },
+                        ]}
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item label="Image">
+                        <Form.Item
+                            name="image"
+                            valuePropName="image"
+                            getValueFromEvent={getValueFromEvent}
+                            noStyle
+                        >
+                            <Upload.Dragger
+                                name="file"
+                                action={`${apiUrl}/media/upload`}
+                                listType="picture"
+                                maxCount={1}
+                                multiple
+                            >
+                                <p className="ant-upload-text">
+                                    Drag & drop a file in this area
+                                </p>
+                            </Upload.Dragger>
+                        </Form.Item>
+                    </Form.Item>
+
+                    <Form.Item
+                        label="Start Date"
+                        name={["startDate"]}
+                        rules={[
+                            {
+                                required: true,
+                            },
+                        ]}
+                        getValueProps={(value) => ({
+                            value: value ? dayjs(value) : undefined,
+                        })}
+                    >
+                        <DatePicker />
+                    </Form.Item>
+                    <Form.Item
+                        label="End Date"
+                        name={["endDate"]}
+                        rules={[
+                            {
+                                required: true,
+                            },
+                        ]}
+                        getValueProps={(value) => ({
+                            value: value ? dayjs(value) : undefined,
+                        })}
+                    >
+                        <DatePicker />
+                    </Form.Item>
+                    {instructorsList.isLoading ? <div>Loading...</div> :
+                        instructorsList.isError ? <div>Something went wrong! {instructorsList.error.message} </div> :
+                            <Form.Item label="Instructor" >
+                                <Select
+                                    placeholder="Select Instructor"
+                                    style={{ width: 200 }}
+                                >
+                                    {options?.map((option) => (
+                                        <Select.Option key={option.value} value={option.value}>
+                                            {option.label}
+                                        </Select.Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>}
+
                     <Title level={2}>Select Lesson To Edit</Title>
                     <Row>
                         <Col xs={24}>
-                            <Select
-                                placeholder="Select Lesson to Edit"
-                                style={{ minWidth: 350, maxWidth: "60vw" }}
-                                onChange={handleSelectChange}
-                                ref={selectRef}
-                            >
-                                {lessons?.map((lesson: ILesson, index: number) => (
-                                    <Select.Option key={index} value={index}>
-                                        {lesson.title}
-                                    </Select.Option>))}
-                            </Select>
-
-
+                            <Space size="large">
+                                <Select
+                                    placeholder="Select Lesson to Edit"
+                                    style={{ minWidth: 350, maxWidth: "60vw" }}
+                                    onChange={handleSelectChange}
+                                    ref={selectRef}
+                                >
+                                    {lessons?.map((lesson: ILesson, index: number) => (
+                                        <Select.Option key={index} value={index}>
+                                            {lesson.title}
+                                        </Select.Option>))}
+                                </Select>
+                                <Button onClick={handleNewLesson}>New Lesson</Button>
+                            </Space>
                             <Form.Item
                                 label={`Lesson ${lessonIndex + 1}`}
                             >
@@ -159,13 +323,13 @@ export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
                                     >
                                         <Input type="text" ref={videoRef} />
                                     </Form.Item>
-                                    <ReactPlayer 
-                                    url={lessons[lessonIndex]?.video} 
-                                    playing={false} 
-                                    controls={true}
-                                    width='100%'
-                                    className='react-player'
-                                    pip={true}/>
+                                    <ReactPlayer
+                                        url={lessons[lessonIndex]?.video}
+                                        playing={false}
+                                        controls={true}
+                                        width='100%'
+                                        className='react-player'
+                                        pip={true} />
                                 </Row>
                             </Form.Item>
 
@@ -182,5 +346,6 @@ export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
                 </Form>
             </Edit >
         </>
-)}
+    )
+}
 export default CourseEdit;

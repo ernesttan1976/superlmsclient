@@ -44,3 +44,13 @@ export interface IItem {
     name: string;
     price: number;
   }
+
+export interface IInstructors {
+    _id: string;
+    name: string;
+}
+
+export interface IOptions {
+    label: string;
+    value: number;
+}
