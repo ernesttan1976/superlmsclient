@@ -15,14 +15,15 @@ export const CourseList: React.FC<IResourceComponentsProps> = () => {
     const { tableProps } = useTable({
         syncWithLocation: true,
     });
+    
 
     return (
         <List>
-            <Table {...tableProps} rowKey="_id">
+            <Table {...tableProps} rowKey='_id'>
                 <Table.Column
                     title="Actions"
                     dataIndex="actions"
-                    render={(_, record: BaseRecord) => (
+                    render={(_: any, record: BaseRecord) => (
                         <Space>
                             <EditButton
                                 hideText

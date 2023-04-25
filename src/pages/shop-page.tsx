@@ -84,10 +84,10 @@ export const ShopPage = () => {
                 speed={1000}
             >
                 {courses?.map((course) => (
-                    <img alt={course.title} src={course.image} height={150}/>
+                    <img key={course._id} alt={course.title} src={course.image} height={150}/>
                 ))}
                 {courses?.map((course) => (
-                    <img alt={course.title} src={course.image} height={150} width={200}/>
+                    <img key={course._id} alt={course.title} src={course.image} height={150} width={200}/>
                 ))}
             </Carousel>
              </Col >
@@ -95,10 +95,9 @@ export const ShopPage = () => {
 
                 <Space size="large" wrap={true} style={{ justifyContent: "space-around" }}>
                     {courses?.map((course) => (
-                        <Col xs={24} sm={12} md={6} lg={6} xl={6} >
+                        <Col key={course._id} xs={24} sm={12} md={6} lg={6} xl={6} >
                             <Space size="large" >
                                 <Card
-                                    key={course._id}
                                     hoverable
                                     style={{ width: 320, minHeight: 320, boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)" }}
                                     cover={<img alt={course.title} src={course.image} />}
@@ -117,38 +116,6 @@ export const ShopPage = () => {
                                                     name: course.title,
                                                     price: course.price,
                                                 })} style={{ width: 165 }} type="primary" icon=<DollarCircleOutlined /> >Add to Cart ${course.price}</Button>
-                                            </Space>
-                                        </Row>
-                                        <Link to='/cart'>
-                                            <Link to={`/courses/content/${course._id}`}>
-                                                <Button style={{ width: 273 }} type="primary" icon=<PlaySquareOutlined /> >Learn</Button>
-                                            </Link>
-
-                                        </Link>
-                                    </Space>
-                                </Card>
-                            </Space>
-                        </Col>
-                    ))}
-                    {courses?.map((course) => (
-                        <Col xs={24} sm={12} md={6} lg={6} xl={6} >
-                            <Space size="large" >
-                                <Card
-                                    key={course._id}
-                                    hoverable
-                                    style={{ width: 320, minHeight: 320, boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)" }}
-                                    cover={<img alt={course.title} src={course.image} />}
-                                >
-                                    <Meta title={course.title} description={course.description} />
-                                    <ul>
-                                        <li><Text>{`Start of Course: ${dayjs(course.startDate,).format('DD/MM/YYYY')}`}</Text></li>
-                                        <li><Text>{`End of Course: ${dayjs(course.endDate).format('DD/MM/YYYY')}`}</Text></li>
-                                    </ul>
-                                    <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
-                                        <Row>
-                                            <Space>
-                                                <Link to={`/courses/preview/${course._id}`}><Button style={{ width: 100 }} type="primary" icon=<EyeOutlined /> >Preview</Button></Link>
-                                                <Button style={{ width: 165 }} type="primary" icon=<DollarCircleOutlined /> >Add to Cart ${course.price}</Button>
                                             </Space>
                                         </Row>
                                         <Link to='/cart'>

@@ -48,6 +48,10 @@ export const CourseShow: React.FC<IResourceComponentsProps> = () => {
                                     <Title level={5}>End Date</Title>
                                     <DateField value={course?.endDate} />
                                 </Space>
+                                <Space align="baseline">
+                                    <Title level={5}>Price</Title>
+                                    <TextField value={`$${course?.price}`} />
+                                </Space>
                             </Space>
                         </Space>
                     </Col>

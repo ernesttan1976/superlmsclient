@@ -1,8 +1,8 @@
 import React from "react";
 import { useState, useEffect, useRef, RefObject } from 'react';
-import { IResourceComponentsProps, useApiUrl, useList, useNotification, useSelect, useUpdate } from "@refinedev/core";
+import { IResourceComponentsProps, file2Base64, useApiUrl, useList, useNotification, useSelect, useUpdate } from "@refinedev/core";
 import { TextField, ImageField, DateField, Edit, useForm, getValueFromEvent } from "@refinedev/antd";
-import { Typography, Row, Col, Space, Card, Form, Input, Select, InputRef, RefSelectProps, DatePicker, Avatar, Upload, Badge, Image, Button, Breadcrumb } from "antd";
+import { Typography, Row, Col, Space, Card, Form, Input, Select, InputRef, RefSelectProps, DatePicker, Avatar, Upload, Badge, Image, Button, Breadcrumb, Progress } from "antd";
 import DraggableTable from "./draggableTable";
 import { ICourse, IUser, ILesson, IDiscussion, IInstructors, IOptions } from "../../models"
 import Meta from "antd/es/card/Meta";
@@ -10,17 +10,10 @@ import ReactPlayer from "react-player";
 import "./edit.module.css"
 import { useInvalidate } from "@refinedev/core";
 import axios from 'axios';
-import { RcFile } from 'rc-upload/lib/interface';
-import { UploadRequestOption } from 'rc-upload/lib/interface';
 import dayjs from "dayjs";
 
 const { Title } = Typography;
 
-type SelectRef = {
-    focus: () => void;
-    blur: () => void;
-    scrollTo: (scrollTop: number) => void;
-};
 
 export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
     let titleRef = useRef<InputRef | null>(null)
@@ -32,13 +25,15 @@ export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
 
     const formObject = useForm<ICourse>();
     const { formProps, saveButtonProps, queryResult } = formObject
+
     const apiUrl = useApiUrl();
     const [imageUrl, setImageUrl] = useState<string>("");
+    const [progress, setProgress] = useState(0);
 
     const [lessons, setLessons] = useState<ILesson[]>([]);
     const [lessonIndex, setLessonIndex] = useState<number>(0);
     const updateQuery = useUpdate();
-    const { open, close } = useNotification();
+    const { open } = useNotification();
     const invalidate = useInvalidate();
     const instructorsList = useList<IInstructors>({
         resource: "users",
@@ -50,7 +45,7 @@ export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
             },
         ],
     });
-    const { data, isLoading, isError, error } = instructorsList;
+    const { data } = instructorsList;
 
     const options = data?.data.map((item: IInstructors) => ({
         label: item.name,
@@ -62,14 +57,14 @@ export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
 
     useEffect(() => {
         setLessons(queryResult?.data?.data.lessons_id ?? []);
-    }, [queryResult])
+    }, [])
 
 
     if (!queryResult) return <Title level={2}>Loading...</Title>
     const course = queryResult?.data?.data;
 
     if (!course) return <h2>Loading...</h2>
-
+    if (!formProps) return <h2>Loading...</h2>
 
     function handleNewLesson() {
         //create one with placeholder values
@@ -104,7 +99,7 @@ export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
                 id: course._id,
             },
             {
-                onError: (error, variables, context) => {
+                onError: (error) => {
                     // An error occurred!
                     open?.({
                         type: "error",
@@ -112,7 +107,7 @@ export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
                         description: error.message,
                     })
                 },
-                onSuccess: (data, variables, context) => {
+                onSuccess: () => {
                     // Let's celebrate!
                     open?.({
                         type: "success",
@@ -131,6 +126,46 @@ export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
     function handleSelectChange(value: number) {
         setLessonIndex(value)
     }
+
+    async function handleVideo(e: React.ChangeEvent) {
+        try {
+            console.log("Upload Video Event")
+            if (e.target instanceof HTMLInputElement) {
+                console.dir(e.target.files?.[0])
+
+                const file = e.target.files?.[0];
+
+                const videoData = new FormData();
+                if (file) {
+                    videoData.append("video", file);
+                }
+                console.dir(videoData);
+                // save progress bar and send video as form data to backend
+                const axiosObject = await axios.post(
+                    `${apiUrl}/media/video-upload`,
+                    videoData,
+                    {
+                        // headers: {
+                        //     'Content-Type': 'multipart/form-data'
+                        // },
+                        onUploadProgress: (e) => {
+                            setProgress(Math.round((100 * e.loaded) / e.total));
+                        },
+                    }
+                );
+                const {data} = axiosObject;
+                // once response is received
+                console.log(data, axiosObject);
+                if (!data) {
+                    console.log("no data!");
+                }
+                // videoRef.current = data;
+                //setValues({ ...values, video: data });
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    };
 
     return (
         <>
@@ -163,6 +198,10 @@ export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
                                         <Title level={5}>End Date</Title>
                                         <DateField value={course?.endDate} />
                                     </Space>
+                                    <Space align="baseline">
+                                        <Title level={5}>Price</Title>
+                                        <TextField value={`$${course?.price}`} />
+                                    </Space>
                                 </Space>
                             </Space>
                         </Col>
@@ -190,19 +229,21 @@ export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
                     >
                         <Input />
                     </Form.Item>
-                    <Form.Item label="Image">
+
+                    {/* <Form.Item label="Image">
                         <Form.Item
                             name="image"
-                            valuePropName="image"
+                            valuePropName="fileList"
                             getValueFromEvent={getValueFromEvent}
                             noStyle
                         >
+
                             <Upload.Dragger
-                                name="file"
-                                action={`${apiUrl}/media/upload`}
                                 listType="picture"
-                                maxCount={1}
+                                name="fileList"
+                                action={`${apiUrl}/media/upload`}
                                 multiple
+                                maxCount={1}
                             >
                                 <p className="ant-upload-text">
                                     Drag & drop a file in this area
@@ -210,7 +251,21 @@ export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
                             </Upload.Dragger>
                         </Form.Item>
                     </Form.Item>
+                    <ImageField style={{ maxWidth: "400px" }} value={course?.image} /> */}
 
+
+                    <Form.Item
+                        label="Price"
+                        name={["price"]}
+                        rules={[
+                            {
+                                pattern: /^-?\d+(\.\d{1,2})?$/, // regular expression for 2 decimal places
+                                message: "Please enter a valid price with 2 decimal places",
+                            },
+                        ]}
+                    >
+                        <Input />
+                    </Form.Item>
                     <Form.Item
                         label="Start Date"
                         name={["startDate"]}
@@ -317,12 +372,6 @@ export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
                                     </Col>
                                 </Row>
                                 <Row justify="center" align="top" className='player-wrapper'>
-                                    <Form.Item
-                                        label="Video Url"
-                                        name={["lessons_id", lessonIndex, "video"]}
-                                    >
-                                        <Input type="text" ref={videoRef} />
-                                    </Form.Item>
                                     <ReactPlayer
                                         url={lessons[lessonIndex]?.video}
                                         playing={false}
@@ -330,6 +379,28 @@ export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
                                         width='100%'
                                         className='react-player'
                                         pip={true} />
+                                </Row>
+                                <Row style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%" }}>
+                                    <Col sm={24}>
+                                        <Form.Item
+                                            label="Video Url"
+                                            name={["lessons_id", lessonIndex, "video"]}
+                                        >
+                                            <Input type="text" ref={videoRef} width="100%" />
+                                        </Form.Item>
+                                        <label style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", width: "100%", height: 150, border: "dashed gray 2px", margin: "24px 0" }}>
+                                            <Title level={5}>Drag and Drop to Upload Video Here</Title>
+                                            <input onChange={(e) => handleVideo(e)} type="file" accept="video/*" hidden />
+                                            {progress > 0 && (
+                                            <Progress
+                                                style={{ display: "flex", justifyContent: "center", padding: 8 }}
+                                                percent={progress}
+                                                steps={10}
+                                            />
+                                        )}
+                                        </label>
+                                        
+                                    </Col>
                                 </Row>
                             </Form.Item>
 

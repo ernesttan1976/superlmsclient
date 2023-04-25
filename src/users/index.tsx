@@ -40,12 +40,12 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                             <EditButton
                                 hideText
                                 size="small"
-                                recordItemId={record.id}
+                                recordItemId={record._id}
                             />
                             <ShowButton
                                 hideText
                                 size="small"
-                                recordItemId={record.id}
+                                recordItemId={record._id}
                             />
                         </Space>
                     )}
