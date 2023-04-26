@@ -1,15 +1,16 @@
 import React from "react";
-import {useState} from 'react';
+import { useState } from 'react';
 import { IResourceComponentsProps, useApiUrl, useList } from "@refinedev/core";
-import { Create, useForm, getValueFromEvent} from "@refinedev/antd";
-import { Form, Input, DatePicker, Avatar, Upload, Select } from "antd";
+import { Create, useForm, getValueFromEvent, Edit } from "@refinedev/antd";
+import { Form, Input, DatePicker, Avatar, Upload, Select, Tabs } from "antd";
 import dayjs from "dayjs";
 import axios from 'axios';
 import { RcFile } from 'rc-upload/lib/interface';
 import { UploadRequestOption } from 'rc-upload/lib/interface';
 import { IInstructors } from "models";
+import LessonEdit from "./lessonEdit";
 
-export const CourseCreate: React.FC<IResourceComponentsProps> = () => {
+export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
     const { formProps, saveButtonProps, queryResult } = useForm();
     const apiUrl = useApiUrl();
     const [imageUrl, setImageUrl] = useState<string>("");
@@ -25,14 +26,14 @@ export const CourseCreate: React.FC<IResourceComponentsProps> = () => {
     });
     const { data, isLoading, isError, error } = instructorsList;
 
-    const  options = data?.data.map((item: IInstructors) => ({
+    const options = data?.data.map((item: IInstructors) => ({
         label: item.name,
         value: item._id,
     }))
 
-    return (
-        <Create saveButtonProps={saveButtonProps}>
-            <Form {...formProps} layout="vertical">
+    const courseEditElements = () => {
+        return (
+            <>
                 <Form.Item
                     label="Title"
                     name={["title"]}
@@ -105,23 +106,43 @@ export const CourseCreate: React.FC<IResourceComponentsProps> = () => {
                     <DatePicker />
                 </Form.Item>
                 {instructorsList.isLoading ? <div>Loading...</div> :
-                instructorsList.isError ? <div>Something went wrong! {instructorsList.error.message} </div> :
-                <Form.Item label="Instructor" >
-                    <Select
-                        placeholder="Select Instructor"
-                        style={{ width: 200 }}
-                    >
-                        {options?.map((option) => (
-                            <Select.Option key={option.value} value={option.value}>
-                                {option.label}
-                            </Select.Option>
-                        ))}
-                    </Select>
-                </Form.Item>}
+                    instructorsList.isError ? <div>Something went wrong! {instructorsList.error.message} </div> :
+                        <Form.Item label="Instructor" >
+                            <Select
+                                placeholder="Select Instructor"
+                                style={{ width: 200 }}
+                            >
+                                {options?.map((option) => (
+                                    <Select.Option key={option.value} value={option.value}>
+                                        {option.label}
+                                    </Select.Option>
+                                ))}
+                            </Select>
+                        </Form.Item>}
+            </>
+        )
+    }
+
+    return (
+        <Edit saveButtonProps={saveButtonProps}>
+            <Form {...formProps} layout="vertical">
+                <Tabs defaultActiveKey="1" items={[
+                        {
+                            label: 'Course Details Edit',
+                            key: '1',
+                            children: courseEditElements(),
+                        },
+                        {
+                            label: 'Lessons Edit',
+                            key: '2',
+                            children: <LessonEdit />,
+                        },
+                    ]}
+                />
             </Form>
-        </Create>
+        </Edit>
     );
 };
 
 
-export default CourseCreate
+export default CourseEdit

@@ -30,9 +30,12 @@ import {
   ReadOutlined,
   ReadFilled,
   TeamOutlined,
+  ShopOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, Grid, Drawer, Button, theme, Space, Divider } from "antd";
 import type { RefineThemedLayoutSiderProps } from "@refinedev/antd";
+import { useGetIdentity } from "@refinedev/core";
+import { ICourse } from "models";
 
 const drawerButtonStyles: CSSProperties = {
   borderTopLeftRadius: 0,
@@ -67,6 +70,10 @@ export const ThemedSider: React.FC<RefineThemedLayoutSiderProps> = ({
   const { hasDashboard } = useRefineContext();
   const authProvider = useActiveAuthProvider();
   const { mutate: mutateLogout } = useLogout({
+    v3LegacyAuthProviderCompatible: Boolean(authProvider?.isLegacy),
+  });
+
+  const { data: user } = useGetIdentity({
     v3LegacyAuthProviderCompatible: Boolean(authProvider?.isLegacy),
   });
 
@@ -182,20 +189,26 @@ export const ThemedSider: React.FC<RefineThemedLayoutSiderProps> = ({
   items.push(
     <Menu.Item
       key="home"
-      icon={<HomeFilled />}>
-      <Link to="/">Home</Link>
+      icon={<ShopOutlined />}>
+      <Link to="/">Course Catalog</Link>
     </Menu.Item>,
     <Menu.Item
-      key="mycourses"
+      key="mycourses2"
       icon={<ReadOutlined />}>
-      <Link to="/courses/content">My Courses</Link>
+      <Link to="/courses/content">Learn</Link>
     </Menu.Item>,
+      (user?.courses_id?.map((course: ICourse)=>(
+          <Menu.Item
+            key={course._id}
+            icon={<ReadOutlined />}>
+            <Link to={`/courses/content/${course._id}`}>{course.title}</Link>
+          </Menu.Item>))),
     <Menu.Item
       key="cart"
       icon={<ShoppingFilled />}>
       <Link to="/cart">Cart</Link>
     </Menu.Item>,
-    <Divider key="divider"/>,
+    <Divider key="divider" />,
     <Menu.Item
       key="admincourses"
       icon={<ReadFilled />}>

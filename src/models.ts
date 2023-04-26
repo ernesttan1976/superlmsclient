@@ -35,8 +35,9 @@ export interface ILesson {
 
 export interface IDiscussion {
     _id: number;
-    discussion: string;
-    user_id: IUser;
+    text: string;
+    name: string;
+    avatar: string;
 }
 
 export interface IItem {

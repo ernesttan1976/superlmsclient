@@ -9,6 +9,7 @@ import {
     EmailField,
     ImageField,
     DateField,
+    DeleteButton,
 } from "@refinedev/antd";
 import { Table, Space } from "antd";
 
@@ -47,6 +48,11 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                                 size="small"
                                 recordItemId={record._id}
                             />
+                            <DeleteButton
+                                hideText
+                                size="small"
+                                recordItemId={record._id}
+                            />
                         </Space>
                     )}
                 />
@@ -56,7 +62,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                     title="Email"
                     render={(value: any) => <EmailField value={value} />}
                 />
-                <Table.Column dataIndex="userRole" title="User Role" />
+                <Table.Column dataIndex="role" title="Role" />
                 <Table.Column
                     dataIndex={["avatar"]}
                     title="Avatar"
@@ -68,7 +74,7 @@ export const UserList: React.FC<IResourceComponentsProps> = () => {
                     )}
                 />
                 <Table.Column
-                    dataIndex="courses_id"
+                    dataIndex={["courses_id"]}
                     title="Courses"
                     render={(value: any[]) =>
                         courseIsLoading ? (

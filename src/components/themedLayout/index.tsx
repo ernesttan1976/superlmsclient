@@ -28,6 +28,8 @@ export const ThemedLayout: React.FC<RefineThemedLayoutProps> = ({
           <div
             style={{
               minHeight: 360,
+              width: "100%",
+              height: "100%",
               padding: 0,
               position: "relative",
             }}

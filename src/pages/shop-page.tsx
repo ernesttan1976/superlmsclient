@@ -43,21 +43,13 @@ export const ShopPage = () => {
     }
 
 
-    //5d93ad92609d4c77cce4224f6119cb7a
-    //https://ernest-ga-bucket1.s3.ap-southeast-1.amazonaws.com/tourism01.jpg
-    // <img src="https://ernest-ga-bucket1.s3.ap-southeast-1.amazonaws.com/tourism01.jpg" alt="" />
-
-
-
     const onChange = (newValue: string) => {
         console.log(newValue);
         setValue(newValue);
     };
 
     const courses = data?.data ?? [];
-    //                        style={{ display: "flex", justifyContent: "center", alignItems: "center", width: 300 }}
-    //                        prevArrow={<LeftCircleOutlined />} nextArrow={<RightCircleOutlined />} arrows={true}
-
+    
     const handleAddToCart = (item: Item)=>{
         addToCart(item);
         go({

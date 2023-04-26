@@ -15,7 +15,7 @@ import dayjs from "dayjs";
 const { Title } = Typography;
 
 
-export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
+export const LessonEdit: React.FC<IResourceComponentsProps> = () => {
     let titleRef = useRef<InputRef | null>(null)
     let descriptionRef = useRef<InputRef | null>(null)
     let imageRef = useRef<InputRef | null>(null)
@@ -171,7 +171,7 @@ export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
         <>
             <Edit saveButtonProps={saveButtonProps}>
                 <Form {...formProps} layout="vertical">
-                    <Title level={2}>Course Details: {course?.title}</Title>
+                    {/* <Title level={2}>Course Details: {course?.title}</Title>
                     <Title level={4}>Instructor: {course?.instructor_id.name}</Title>
                     <Row>
                         <Col xs={24} style={{ margin: 48 }}>
@@ -205,9 +205,9 @@ export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
                                 </Space>
                             </Space>
                         </Col>
-                    </Row>
+                    </Row> */}
 
-                    <Form.Item
+                    {/* <Form.Item
                         label="Title"
                         name={["title"]}
                         rules={[
@@ -230,7 +230,7 @@ export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
                         <Input />
                     </Form.Item>
 
-                    {/* <Form.Item label="Image">
+                    <Form.Item label="Image">
                         <Form.Item
                             name="image"
                             valuePropName="fileList"
@@ -251,7 +251,7 @@ export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
                             </Upload.Dragger>
                         </Form.Item>
                     </Form.Item>
-                    <ImageField style={{ maxWidth: "400px" }} value={course?.image} /> */}
+                    <ImageField style={{ maxWidth: "400px" }} value={course?.image} />
 
 
                     <Form.Item
@@ -293,8 +293,9 @@ export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
                         })}
                     >
                         <DatePicker />
-                    </Form.Item>
-                    {instructorsList.isLoading ? <div>Loading...</div> :
+                    </Form.Item> */}
+
+                    {/* {instructorsList.isLoading ? <div>Loading...</div> :
                         instructorsList.isError ? <div>Something went wrong! {instructorsList.error.message} </div> :
                             <Form.Item label="Instructor" >
                                 <Select
@@ -307,7 +308,7 @@ export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
                                         </Select.Option>
                                     ))}
                                 </Select>
-                            </Form.Item>}
+                            </Form.Item>} */}
 
                     <Title level={2}>Select Lesson To Edit</Title>
                     <Row>
@@ -419,4 +420,4 @@ export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
         </>
     )
 }
-export default CourseEdit;
+export default LessonEdit;
