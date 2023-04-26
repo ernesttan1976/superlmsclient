@@ -11,7 +11,7 @@ import { useQuery } from "@tanstack/react-query"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import "./course-content-page.module.css"
 import ChatPage from '../components/chat.component'
-
+import OpenAiLogo from "../pages/openai.gif"
 const { Title, Text } = Typography;
 const { Panel } = Collapse;
 
@@ -23,7 +23,7 @@ const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
 );
 
 const queryClient = new QueryClient({
-    defaultOptions: { queries: { staleTime: 300000 } }
+    defaultOptions: { queries: { staleTime: 1000 } }
 });
 
 
@@ -130,22 +130,27 @@ export const CourseContentPage = (props: any) => {
                     />
                 </FloatButton.Group>
                 <Drawer
-                    title={`Course Chat for ${course.title}`}
+                    title={<>
+                    <img style={{margin: 8}} src={OpenAiLogo} width={40} height={40} />
+                    <Text style={{fontSize: "0.8rem"}}>Course Chat for {course.title}</Text><br/>
+                    </>}
                     placement="left"
                     onClose={onCloseChat}
                     open={openChat}
                     mask={false}
-                    width={"80%"}
+                    width={"92%"}
                     height={"100%"}
                     maskClosable={false}
                     bodyStyle={{
-                        padding: 24
+                        padding: "24px 8px",
+                        width: "100%",
+                        height: "100%",
                     }}
                 >
                     {course?.discussions_id ? 
-                    <Col sm={24}>
+                    <Col sm={24} style={{overflowY: "scroll", height: "100%", padding: 8}}>
                         <ChatPage 
-                            discussions_id={course.discussions_id} course_id={course._id} />
+                            discussions_id={course.discussions_id} course_id={course._id} title={course.title}/>
                     </Col> : <Title>Chat is empty</Title>}
                 </Drawer>
                 <Drawer

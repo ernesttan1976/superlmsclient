@@ -56,7 +56,6 @@ const ShoppingCartProvider: React.FC<Props> = ({ items, children }) => {
 };
 
 
-
 const ShoppingCart: React.FC = () => {
   const { cartItems, addToCart, removeFromCart, getTotal } = useContext(
     ShoppingCartContext
@@ -67,6 +66,8 @@ const ShoppingCart: React.FC = () => {
   const { data: user } = useGetIdentity({
     v3LegacyAuthProviderCompatible: Boolean(authProvider?.isLegacy),
   });
+
+  if (!user) return <h1>No user, please log in</h1>
 
   const columns = [{
     title: "No",
@@ -96,6 +97,7 @@ const ShoppingCart: React.FC = () => {
       return (<Button type="primary" onClick={() => removeFromCart(record)}>Remove from cart</Button>)
     }
   }]
+
   const data = cartItems.map((cartItem, index) => (
     {
       id: cartItem.id,
@@ -103,7 +105,22 @@ const ShoppingCart: React.FC = () => {
       price: cartItem.price
     }));
 
-  const handleBuy=()=>{
+  async function enrollUser(user: any, cartItems: any) {
+    try {
+      console.log(user, cartItems)
+      const newCourses_id = [...user?.courses_id?._id, ...cartItems.map((id: number) => id)]
+      console.log(newCourses_id)
+      const res = await axios.patch(`${DATA_URI}/users/enroll/${user._id}`,
+        {
+          courses_id: [...newCourses_id]
+        })
+      return res.data;
+    } catch (error) {
+      return error
+    }
+  }
+
+  const handleBuy = () => {
     //goto stripe and do the transaction
     // skipped
 
@@ -111,40 +128,19 @@ const ShoppingCart: React.FC = () => {
     //add the course items to the user list
     console.log(user)
     console.log(cartItems)
-    async function enrollUser(user: any, cartItems: any){
-      try{
-  
-          const newCourses_id = [...user.courses_id, ...cartItems.map((id:any)=>id)]
-          const res = await axios.patch(`${DATA_URI}/users/edit/`,
-          {
-            courses_id: newCourses_id
-          })
-          return res.data;
-      } catch (error) {
-          return error
-      }
-  }
-
-    
+    enrollUser(user, cartItems);
   }
 
   return (
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
-      <Space direction="vertical" style={{padding: 24, display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "center", width: "100%", height: "100%"}}>
+      <Space direction="vertical" style={{ padding: 24, display: "flex", flexDirection: "column", justifyContent: "flex-start", alignItems: "center", width: "100%", height: "100%" }}>
         <Title level={2}>Shopping Cart</Title>
-        <Table style={{display: "flex", flexDirection: "column", width: "80vw"}} columns={columns} dataSource={data} />
+        <Table style={{ display: "flex", flexDirection: "column", width: "80vw" }} columns={columns} dataSource={data} />
         <Title level={5}>Total: ${getTotal()}</Title>
-        <Button onClick={handleBuy} type="primary" style={{alignSelf: "center", width: "100%" }}>Pay</Button>
+        <Button onClick={() => handleBuy()} type="primary" style={{ alignSelf: "center", width: "100%" }}>Pay</Button>
       </Space>
     </div>
   );
 };
 
 export { ShoppingCartContext, ShoppingCartProvider, ShoppingCart };
-
-
-
-  function useUpdate() {
-    throw new Error("Function not implemented.");
-  }
-  

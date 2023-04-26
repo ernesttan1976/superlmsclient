@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect, useRef, RefObject } from 'react';
-import { IResourceComponentsProps, file2Base64, useApiUrl, useList, useNotification, useSelect, useUpdate } from "@refinedev/core";
+import { IResourceComponentsProps, file2Base64, useList, useNotification, useSelect, useUpdate } from "@refinedev/core";
 import { TextField, ImageField, DateField, Edit, useForm, getValueFromEvent } from "@refinedev/antd";
 import { Typography, Row, Col, Space, Card, Form, Input, Select, InputRef, RefSelectProps, DatePicker, Avatar, Upload, Badge, Image, Button, Breadcrumb, Progress } from "antd";
 import DraggableTable from "./draggableTable";
@@ -14,6 +14,7 @@ import dayjs from "dayjs";
 
 const { Title } = Typography;
 
+const DATA_URI = (process.env.NODE_ENV === 'production') ? process.env.REACT_APP_PRODUCTION_URI : process.env.REACT_APP_DEV_URI;
 
 export const LessonEdit: React.FC<IResourceComponentsProps> = () => {
     let titleRef = useRef<InputRef | null>(null)
@@ -26,7 +27,6 @@ export const LessonEdit: React.FC<IResourceComponentsProps> = () => {
     const formObject = useForm<ICourse>();
     const { formProps, saveButtonProps, queryResult } = formObject
 
-    const apiUrl = useApiUrl();
     const [imageUrl, setImageUrl] = useState<string>("");
     const [progress, setProgress] = useState(0);
 
@@ -142,7 +142,7 @@ export const LessonEdit: React.FC<IResourceComponentsProps> = () => {
                 console.dir(videoData);
                 // save progress bar and send video as form data to backend
                 const axiosObject = await axios.post(
-                    `${apiUrl}/media/video-upload`,
+                    `${DATA_URI}/media/video-upload`,
                     videoData,
                     {
                         // headers: {
@@ -241,7 +241,7 @@ export const LessonEdit: React.FC<IResourceComponentsProps> = () => {
                             <Upload.Dragger
                                 listType="picture"
                                 name="fileList"
-                                action={`${apiUrl}/media/upload`}
+                                action={`${DATA_URI}/media/upload`}
                                 multiple
                                 maxCount={1}
                             >

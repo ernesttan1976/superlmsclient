@@ -34,7 +34,6 @@ export interface ILesson {
 }
 
 export interface IDiscussion {
-    _id: number;
     text: string;
     name: string;
     avatar: string;

@@ -3,6 +3,8 @@ import { axiosInstance, generateSort, generateFilter } from "./utils";
 import { AxiosInstance } from "axios";
 import { stringify } from "query-string";
 
+const DATA_URI = (process.env.NODE_ENV === 'production') ? process.env.REACT_APP_PRODUCTION_URI : process.env.REACT_APP_DEV_URI;
+
 export const dataProvider = (
   apiUrl: string,
   httpClient: AxiosInstance = axiosInstance

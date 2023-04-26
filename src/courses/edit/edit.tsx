@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from 'react';
-import { IResourceComponentsProps, useApiUrl, useList } from "@refinedev/core";
+import { IResourceComponentsProps, useList } from "@refinedev/core";
 import { Create, useForm, getValueFromEvent, Edit } from "@refinedev/antd";
 import { Form, Input, DatePicker, Avatar, Upload, Select, Tabs } from "antd";
 import dayjs from "dayjs";
@@ -10,9 +10,11 @@ import { UploadRequestOption } from 'rc-upload/lib/interface';
 import { IInstructors } from "models";
 import LessonEdit from "./lessonEdit";
 
+const DATA_URI = (process.env.NODE_ENV === 'production') ? process.env.REACT_APP_PRODUCTION_URI : process.env.REACT_APP_DEV_URI;
+
+
 export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
     const { formProps, saveButtonProps, queryResult } = useForm();
-    const apiUrl = useApiUrl();
     const [imageUrl, setImageUrl] = useState<string>("");
     const instructorsList = useList<IInstructors>({
         resource: "users",
@@ -65,7 +67,7 @@ export const CourseEdit: React.FC<IResourceComponentsProps> = () => {
                     >
                         <Upload.Dragger
                             name="file"
-                            action={`${apiUrl}/media/upload`}
+                            action={`${DATA_URI}/media/upload`}
                             listType="picture"
                             maxCount={1}
                             multiple
