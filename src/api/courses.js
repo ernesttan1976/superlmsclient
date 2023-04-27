@@ -43,6 +43,24 @@ export async function getCourse(id){
         return error
     }}
 
+    export async function getCourseNoCache(id){
+        try {
+    
+            const res = await axios.get(`${DATA_URI}/courses/nocache/${id}`,
+                {
+                    headers: {
+                        'cache-control': 'no-cache'
+                      },
+                    params: {
+                        _sort: "title"
+                    }
+                })
+                console.log("aixos get for discussion:",res.data)
+            return res.data;
+        } catch (error) {
+            return error
+        }}
+
 export async function createCourse(courseProps){
     try{
 

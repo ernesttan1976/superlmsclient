@@ -1,5 +1,5 @@
 export interface ICourse {
-    _id: number;
+    _id: string;
     title: string;
     description: string;
     image: string;
@@ -13,7 +13,7 @@ export interface ICourse {
   }
 
 export interface IUser {
-    _id: number;
+    _id: string;
     name: string;
     email: string;
     password: string;
@@ -25,7 +25,7 @@ export interface IUser {
 }
 
 export interface ILesson {
-    _id: number;
+    _id: string;
     title: string;
     description: string;
     image: string;
@@ -40,7 +40,7 @@ export interface IDiscussion {
 }
 
 export interface IItem {
-    id: number;
+    id: string;
     name: string;
     price: number;
   }

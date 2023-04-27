@@ -6,7 +6,7 @@ import { Checkbox, Col, Collapse, Drawer, FloatButton, InputRef, List, Row, Spac
 import { ICourse, IUser, ILesson, IDiscussion } from "../models"
 import { StarOutlined, LikeOutlined, MessageOutlined, PlaySquareOutlined, QuestionCircleOutlined, ArrowLeftOutlined, ArrowRightOutlined } from "@ant-design/icons";
 import React, { useCallback, useRef, useState } from "react";
-import { getCourse } from "api/courses";
+import { getCourse, getCourseNoCache } from "api/courses";
 import { useQuery } from "@tanstack/react-query"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import "./course-content-page.module.css"
@@ -30,7 +30,7 @@ const queryClient = new QueryClient({
 export const CourseContentPage = (props: any) => {
     const { id } = useResource();
     const [lessonIndex, setLessonIndex] = useState(0);
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(false);
     const [openChat, setOpenChat] = useState(false);
     const [isLandscape, setIsLandscape] = useState(window.screen.orientation.type.includes("landscape"));
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -140,7 +140,7 @@ export const CourseContentPage = (props: any) => {
                     mask={false}
                     width={"92%"}
                     height={"100%"}
-                    maskClosable={false}
+                    maskClosable={true}
                     bodyStyle={{
                         padding: "24px 8px",
                         width: "100%",
@@ -160,7 +160,7 @@ export const CourseContentPage = (props: any) => {
                     open={open}
                     mask={false}
                     width={350}
-                    maskClosable={false}
+                    maskClosable={true}
                     height="bottom"
                     bodyStyle={{
                         padding: 0
