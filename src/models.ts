@@ -2,7 +2,7 @@ export interface ICourse {
     _id: string;
     title: string;
     description: string;
-    image: string;
+    image: IUploadFile[];
     startDate: Date;
     endDate: Date;
     price: number;
@@ -10,7 +10,15 @@ export interface ICourse {
     students_id: IUser[];
     lessons_id: ILesson[];
     discussions_id: IDiscussion[];
-  }
+}
+
+export interface IUploadFile {
+    name: string;
+    url: string;
+    size: number;
+    key: string;
+    uid: string;
+}
 
 export interface IUser {
     _id: string;
@@ -43,7 +51,7 @@ export interface IItem {
     id: string;
     name: string;
     price: number;
-  }
+}
 
 export interface IInstructors {
     _id: string;

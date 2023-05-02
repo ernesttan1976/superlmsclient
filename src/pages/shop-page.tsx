@@ -92,10 +92,10 @@ export const ShopPage = () => {
                     speed={1000}
                 >
                     {courses?.map((course) => (
-                        <img key={course._id} alt={course.title} src={course.image} height={150} />
+                        <img key={course._id} alt={course.title} src={course.image[0].url} height={150} />
                     ))}
                     {courses?.map((course) => (
-                        <img key={course._id} alt={course.title} src={course.image} height={150} width={200} />
+                        <img key={course._id} alt={course.title} src={course.image[0].url} height={150} width={200} />
                     ))}
                 </Carousel>
             </Col >
@@ -144,7 +144,7 @@ export const ShopPage = () => {
                                 <Card
                                     hoverable
                                     style={{ width: 320, minHeight: 320, boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)" }}
-                                    cover={<img alt={course.title} src={course.image} />}
+                                    cover={<img alt={course.title} src={course.image[0].url} />}
                                 >
                                     <Meta title={course.title} description={course.description} />
                                     <ul>

@@ -7,7 +7,7 @@ import { Avatar, Button,Tooltip, Typography } from 'antd';
 
 import TextArea from 'antd/es/input/TextArea';
 
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, QueryKey, InvalidateOptions  } from "@tanstack/react-query"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { getCourseNoCache } from 'api/courses';
 
@@ -68,7 +68,8 @@ const ChatPage = (props: any) => {
         if (!res2) return
         console.log(res2)
         // setMessages([...messages, ])
-
+        queryClient.invalidateQueries(['courses', course_id])
+        // queryClient.invalidateQueries({ queryKey: ['todos'] })
       }
 
     } catch (error) {

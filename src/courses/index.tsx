@@ -57,13 +57,18 @@ export const CourseList: React.FC<IResourceComponentsProps> = () => {
                 <Table.Column dataIndex="title" title="Title" />
                 <Table.Column dataIndex="description" title="Description" />
                 <Table.Column
-                    dataIndex="image"
+                    dataIndex={["image"]}
                     title="Image"
-                    render={(value: any) => (
-                        <ImageField
+                    render={(value: any[]) => (
+                        <div style={{ width: "200px" }}>
+                            {value?.map((item) => (
+                                // <TagField value={item?.name} key={item?.name} />
+                                <ImageField
                             style={{ width: "200px" }}
-                            value={value}
-                        />
+                            value={item.url}/>
+                            ))}
+                        </div>
+                        
                     )}
                 />
                 <Table.Column

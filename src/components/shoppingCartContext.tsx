@@ -117,8 +117,10 @@ const ShoppingCart: React.FC = () => {
 //...user?.courses_id?._id, 
       const newCourses_id = [...cartItems.map((item: any) => item.id)]
       console.log("Updated courses:", newCourses_id)
-      const res = await axios.patch(`${DATA_URI}/users/enroll/${user._id}`,
+      console.log(user)
+      const res = await axios.patch(`${DATA_URI}/users/enroll`,
         {
+          user: user,
           courses_id: [...newCourses_id]
         })
       console.log("Response: ", res)

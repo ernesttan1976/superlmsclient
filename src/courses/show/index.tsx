@@ -27,7 +27,7 @@ export const CourseShow: React.FC<IResourceComponentsProps> = () => {
                     <Col xs={24} style={{ margin: 48 }}>
                         <Space size="large" direction="horizontal" align="start">
                             <Space>
-                                <ImageField style={{ maxWidth: "400px" }} value={course?.image} />
+                                <ImageField style={{ maxWidth: "400px" }} value={course?.image[0].url} />
                             </Space>
                             <Space direction="vertical">
                                 <Space align="baseline">

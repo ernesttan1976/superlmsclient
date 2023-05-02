@@ -116,3 +116,32 @@ Refine framework uses hooks based on an extended version of Tanstack Query. Unde
 ### queryResult 
 - queryResult.data.data Contains the data
 - queryResult.data.status = "loading | error | success"
+
+### Summary of Multipart/form-data
+
+| Topic                      | `multipart/form-data` | Binary data         | Base64 encoding     |
+|----------------------------|-----------------------|---------------------|---------------------|
+| Purpose                    | Upload binary files    | Native format for   | Convert binary data |
+|                            |                        | computers           | to text format      |
+|                            |                        |                     | for text-based      |
+|                            |                        |                     | protocols            |
+| Example files              | Images, videos, PDFs,  | Any type of binary  | Any type of binary   |
+|                            | documents              | data                | data                |
+| How data is transmitted    | Binary data is sent    | Binary data is sent | Base64-encoded data |
+|                            | as-is in the request   | as-is in the request| is sent as text in  |
+|                            | body                   | body                | the request body    |
+| Efficiency                 | Most efficient for     | Most efficient      | Less efficient for  |
+|                            | binary files           | transmission of     | transmission of      |
+|                            |                        | binary data         | binary data         |
+| Usage                      | Used for file uploads  | Native format for   | Used for text-based |
+|                            |                        | computers           | protocols that don't |
+|                            |                        |                     | support binary data |
+| Examples of protocols      | HTML forms, HTTP,      | Any type of binary  | JSON, XML, email    |
+| that use the encoding      | Web APIs, file         | data transmission   | attachments          |
+|                            | uploads, etc.          |                     |                     |
+| Advantages                 | Efficient and widely   | Native format for   | Can transmit binary |
+|                            | supported              | computers           | data over text-based|
+|                            |                        |                     | protocols            |
+| Disadvantages              | Not suitable for       | Cannot be directly  | Adds overhead to    |
+|                            | text-based protocols   | transmitted over    | the transmission    |
+|                            |                        | text-based protocols|                     |

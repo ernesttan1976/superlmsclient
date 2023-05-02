@@ -107,8 +107,8 @@ const App: React.FC = () => {
     getPermissions: async () => null,
     getIdentity: async () => {
       if (user) {
-        console.log("user=>", user)
-        console.log("userData=>", userData)
+        // console.log("user=>", user)
+        // console.log("userData=>", userData)
         const newUserData = {
           ...user, ...userData,
           avatar: user.picture,
