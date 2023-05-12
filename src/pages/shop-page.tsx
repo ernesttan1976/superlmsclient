@@ -13,6 +13,11 @@ const { Title, Text } = Typography;
 const { Meta } = Card;
 
 export const ShopPage = () => {
+    const authProvider = useActiveAuthProvider();
+    const { data: user } = useGetIdentity({
+      v3LegacyAuthProviderCompatible: Boolean(authProvider?.isLegacy),
+    });
+
     // const [myCourses, setMyCourses] = useState<ICourse[]>([]);
     const go = useGo();
     const { addToCart } = useContext(ShoppingCartContext)
@@ -43,6 +48,12 @@ export const ShopPage = () => {
         return <div>Something went wrong! {error.message} </div>;
     }
 
+    if (!user){
+        return <div>User not logged in, please log in first</div>;
+    }
+
+
+
     // useEffect(() => {
     //     if (user) {
     //         setMyCourses(user.courses_id);
@@ -70,8 +81,8 @@ export const ShopPage = () => {
         });
     };
 
-
-
+    // console.log(user.courses_id);
+    // console.log(courses[0]._id);
 
 
     return (
@@ -100,44 +111,7 @@ export const ShopPage = () => {
                 </Carousel>
             </Col >
             <Col sm={24} style={{ padding: 24 }}>
-
                 <Space size="large" wrap={true} style={{ justifyContent: "space-around" }}>
-                    {/* {(myCourses && myCourses?.length === 0) ? <Title level={5}>You have no courses enrolled</Title> :
-                        myCourses?.map((course) => (
-                            <Col key={course._id} xs={24} sm={12} md={6} lg={6} xl={6} >
-                                <Space size="large" >
-                                    <Card
-                                        hoverable
-                                        style={{ width: 320, minHeight: 320, boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)" }}
-                                        cover={<img alt={course.title} src={course.image} />}
-                                    >
-                                        <Meta title={course.title} description={course.description} />
-                                        <ul>
-                                            <li><Text>{`Start of Course: ${dayjs(course.startDate,).format('DD/MM/YYYY')}`}</Text></li>
-                                            <li><Text>{`End of Course: ${dayjs(course.endDate).format('DD/MM/YYYY')}`}</Text></li>
-                                        </ul>
-                                        <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
-                                            <Row>
-                                                <Space>
-                                                    <Link to={`/courses/preview/${course._id}`}><Button style={{ width: 100 }} type="primary" icon=<EyeOutlined /> >Preview</Button></Link>
-                                                    <Button onClick={() => handleAddToCart({
-                                                        id: course._id,
-                                                        name: course.title,
-                                                        price: course.price,
-                                                    })} style={{ width: 165 }} type="primary" icon=<DollarCircleOutlined /> >Add to Cart ${course.price}</Button>
-                                                </Space>
-                                            </Row>
-                                            <Link to='/cart'>
-                                                <Link to={`/courses/content/${course._id}`}>
-                                                    <Button style={{ width: 273 }} type="primary" icon=<PlaySquareOutlined /> >Learn</Button>
-                                                </Link>
-
-                                            </Link>
-                                        </Space>
-                                    </Card>
-                                </Space>
-                            </Col>
-                        ))} */}
                     {courses?.map((course) => (
                         <Col key={course._id} xs={24} sm={12} md={6} lg={6} xl={6} >
                             <Space size="large" >
@@ -159,12 +133,12 @@ export const ShopPage = () => {
                                                     id: course._id,
                                                     name: course.title,
                                                     price: course.price,
-                                                })} style={{ width: 165 }} type="primary" icon=<DollarCircleOutlined /> >Add to Cart ${course.price}</Button>
+                                                })} style={{ width: 165 }} disabled={user?.courses_id?._id===course._id? false: true} type="primary" icon=<DollarCircleOutlined /> >Add to Cart ${course.price}</Button>
                                             </Space>
                                         </Row>
                                         <Link to='/cart'>
                                             <Link to={`/courses/content/${course._id}`}>
-                                                <Button style={{ width: 273 }} type="primary" icon=<PlaySquareOutlined /> >Learn</Button>
+                                                <Button style={{ width: 273 }} disabled={user?.courses_id?._id===course._id? true:false} type="primary" icon=<PlaySquareOutlined /> >Learn</Button>
                                             </Link>
 
                                         </Link>

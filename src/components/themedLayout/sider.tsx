@@ -35,7 +35,9 @@ import {
 import { Layout, Menu, Grid, Drawer, Button, theme, Space, Divider } from "antd";
 import type { RefineThemedLayoutSiderProps } from "@refinedev/antd";
 import { useGetIdentity } from "@refinedev/core";
-import { ICourse } from "models";
+import { ICourse, IUser } from "models";
+import { Link } from "react-router-dom";
+import OpenAILogo from "../../pages/openai.gif";
 
 const drawerButtonStyles: CSSProperties = {
   borderTopLeftRadius: 0,
@@ -73,9 +75,28 @@ export const ThemedSider: React.FC<RefineThemedLayoutSiderProps> = ({
     v3LegacyAuthProviderCompatible: Boolean(authProvider?.isLegacy),
   });
 
-  // const { data: user } = useGetIdentity({
-  //   v3LegacyAuthProviderCompatible: Boolean(authProvider?.isLegacy),
-  // });
+  const { data: user } = useGetIdentity({
+    v3LegacyAuthProviderCompatible: Boolean(authProvider?.isLegacy),
+  });
+
+  function courseLinks(user: IUser): JSX.Element {
+    const menuElements = user.courses_id.map(course => (
+      <Menu.Item
+        key={course._id}
+        icon={<ReadOutlined />}>
+        <Link to={`/courses/content/${course._id}`} title={course.title}>{course.title.slice(0, 20)}</Link>
+      </Menu.Item>
+    ));
+
+    return (
+      <SubMenu
+        key={"special"}
+        icon={<ReadOutlined />}
+        title={"My Courses"}>
+        {menuElements}
+      </SubMenu>)
+  }
+
 
   const isMobile =
     typeof breakpoint.xl === "undefined" ? false : !breakpoint.xl;
@@ -199,23 +220,29 @@ export const ThemedSider: React.FC<RefineThemedLayoutSiderProps> = ({
   //     </>
   //   )
   // }
-  
+
   const items: JSX.Element[] = [
     <Menu.Item
       key="home"
       icon={<ShopOutlined />}>
       <Link to="/">Course Catalog</Link>
     </Menu.Item>,
-    <Menu.Item
-      key="mycourses2"
-      icon={<ReadOutlined />}>
-      <Link to="/courses/content">Learn</Link>
-    </Menu.Item>,
-      // courseLinks(),
+    // <Menu.Item
+    //   key="mycourses2"
+    //   icon={<ReadOutlined />}>
+    //   <Link to="/courses/content">Learn</Link>
+    // </Menu.Item>,
+
+    user && courseLinks(user),
     <Menu.Item
       key="cart"
       icon={<ShoppingFilled />}>
       <Link to="/cart">Cart</Link>
+    </Menu.Item>,
+    <Menu.Item
+      key="OpenAI"
+      icon={<img src={OpenAILogo} style={{width: 16, height:16}}/>}>
+      <Link to="/courses/content/645e3627be9c3e378c76495f">AI Powered Chat</Link>
     </Menu.Item>,
     <Divider key="divider" />,
     <Menu.Item
@@ -327,6 +354,8 @@ export const ThemedSider: React.FC<RefineThemedLayoutSiderProps> = ({
     return renderDrawerSider();
   }
 
+
+
   return (
     <Layout.Sider
       style={{
@@ -384,3 +413,5 @@ export const ThemedSider: React.FC<RefineThemedLayoutSiderProps> = ({
 };
 
 export default ThemedSider;
+
+

@@ -82,10 +82,10 @@ const ChatPage = (props: any) => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: "flex-start", alignItems: "center", width: "100%", overflowY: "auto" }}>
-        <div style={{ width: "100%", flex: 1 }}>
-            {messages && messages?.map((message, index) => (
-              <div key={index} style={{ display: "flex", alignItems: "flex-end", flexDirection: message?.name === user?.name ? 'row-reverse' : 'row' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: "flex-end", alignItems: "space-between", width: "90%", minHeight: "100%", overflowY: "auto", margin: "0 auto" }}>
+            
+            {!(messages.length >= 0) ? <div style={{display: "flex", width: "100%", height: 200, zIndex:50}}>No messages</div>:  messages?.map((message, index) => (
+              <div key={index} style={{ display: "flex", alignItems: "flex-end", flexDirection: message?.name === user?.name ? 'row-reverse' : 'row', zIndex:50}}>
                 <Avatar size={40} src={message?.avatar} />
                 <p style={{
                   display: 'inline-block',
@@ -101,10 +101,10 @@ const ChatPage = (props: any) => {
                     textAlign: (message?.name === user?.name) ? 'right' : 'left'
                   }}>{message?.name}</Text><br />{message?.text}</p>
               </div>))}
-          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: "flex-start", alignItems: "space-between", height: 120, width: "100%" }}>
+          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: "flex-start", alignItems: "space-between", minHeight: 120, width: "100%" }}>
             <Tooltip title="Talk to Super Bot by mentioning '@super'">
               <TextArea
-                placeholder="Chat with AI bot and with the learning community"
+                placeholder="Chat with AI bot, Instructors and the learning community"
                 autoSize={{ minRows: 3, maxRows: 10 }}
                 size="large"
                 style={{ width: "100%", height: 75, marginTop: 8 }}
@@ -116,14 +116,9 @@ const ChatPage = (props: any) => {
           <div style={{ display: 'flex', justifyContent: "center", alignItems: 'center', marginTop: '40px', height: 50 }}>
             <label htmlFor="numTokensSlider" style={{ marginRight: '10px' }}>Number of tokens:</label>
             <input type="range" id="numTokensSlider" min="56" max="2048" step="24" value={numTokens} onChange={e => setNumTokens(Number(e.target.value))} />
-            {/* <Slider style={{ width: "50%" }} defaultValue={266} tooltip={{ open: false }}
-              onChange={(e: any) => setNumTokens(Number(e.target.value))}
-              min={56} max={2048} step={24} value={numTokens}
-            /> */}
             <span style={{ marginLeft: '10px' }}>{numTokens}</span>
           </div>
         </div>
-      </div>
     </QueryClientProvider>
   );
 };

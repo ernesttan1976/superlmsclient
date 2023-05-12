@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 import { Checkbox, Col, Collapse, Drawer, FloatButton, InputRef, List, Row, Space, Typography } from "antd";
 import { ICourse, IUser, ILesson, IDiscussion } from "../models"
 import { StarOutlined, LikeOutlined, MessageOutlined, PlaySquareOutlined, QuestionCircleOutlined, ArrowLeftOutlined, ArrowRightOutlined } from "@ant-design/icons";
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { getCourse, getCourseNoCache } from "api/courses";
 import { useQuery } from "@tanstack/react-query"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
@@ -31,21 +31,34 @@ export const CourseContentPage = (props: any) => {
     const { id } = useResource();
     const [lessonIndex, setLessonIndex] = useState(0);
     const [open, setOpen] = useState(false);
-    const [openChat, setOpenChat] = useState(false);
+    const [openChat, setOpenChat] = useState(true);
     const [isLandscape, setIsLandscape] = useState(window.screen.orientation.type.includes("landscape"));
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-
+    
     const courseQuery = useQuery<ICourse>({
         queryKey: ['courses'],
         queryFn: () => getCourse(id),
     })
+
+    let course: ICourse;
+
+    useEffect(()=>{
+        if (course && course.lessons_id?.length>0){
+        setTimeout(()=>{
+            setOpenChat(false);
+        },1500)
+    }
+    },[])
 
     const { status, isLoading } = courseQuery;
 
     if (courseQuery.status === "loading") return <h1>Loading...</h1>;
     if (courseQuery.status === "error") return <h1>{JSON.stringify(courseQuery.error)}</h1>
 
-    const course: ICourse = courseQuery.data;
+    course = courseQuery.data;
+
+
+
 
     window.screen.orientation.addEventListener("change", function (e) {
         setIsLandscape(window.screen.orientation.type.includes("landscape"));
@@ -89,7 +102,8 @@ export const CourseContentPage = (props: any) => {
     return (
         <>
             <QueryClientProvider client={queryClient}>
-                <Row style={{ padding: 8, minHeight: 48, width: "100%", display: "flex", justifyContent: "start", alignItems: "center" }}>
+                {(course.lessons_id.length<1) ? <div><Title level={4}>AI Powered Chat Page</Title><Text>Please ask questions</Text></div> :
+                <><Row style={{ padding: 8, minHeight: 48, width: "100%", display: "flex", justifyContent: "start", alignItems: "center" }}>
                     <Title style={{ margin: "auto 12px" }} level={5}>{`${course.title} > ${course.lessons_id[lessonIndex].title}`}</Title>
                 </Row>
                 <Row style={{ padding: 0 }}>
@@ -118,41 +132,6 @@ export const CourseContentPage = (props: any) => {
 
                     />
                 </FloatButton.Group>
-                <FloatButton.Group shape="square"
-                    style={{ zIndex: 1000, display: "flex", justifyContent: "center", alignItems: "center", bottom: 68, left: 0, height: BUTTON_SIZE*1.1, width: BUTTON_SIZE }}
-
-                >
-                    <FloatButton style={{height: "100%", width: "100%"}}
-                        onClick={handleChatDrawerToggle}
-                        icon={<ArrowRightOutlined />}
-                        description={<Text style={{fontSize: "0.50rem", padding: 0, margin: 0}}>Chat</Text>}
-                        tooltip="Chat"
-                    />
-                </FloatButton.Group>
-                <Drawer
-                    title={<>
-                    <img style={{margin: 8}} src={OpenAiLogo} width={40} height={40} />
-                    <Text style={{fontSize: "0.8rem"}}>Course Chat for {course.title}</Text><br/>
-                    </>}
-                    placement="left"
-                    onClose={onCloseChat}
-                    open={openChat}
-                    mask={false}
-                    width={"92%"}
-                    height={"100%"}
-                    maskClosable={true}
-                    bodyStyle={{
-                        padding: "24px 8px",
-                        width: "100%",
-                        height: "100%",
-                    }}
-                >
-                    {course?.discussions_id ? 
-                    <Col sm={24} style={{overflowY: "scroll", height: "100%", padding: 8}}>
-                        <ChatPage 
-                            discussions_id={course.discussions_id} course_id={course._id} title={course.title}/>
-                    </Col> : <Title>Chat is empty</Title>}
-                </Drawer>
                 <Drawer
                     title="Course Content"
                     placement="right"
@@ -160,7 +139,7 @@ export const CourseContentPage = (props: any) => {
                     open={open}
                     mask={false}
                     width={350}
-                    maskClosable={true}
+                    maskClosable={false}
                     height="bottom"
                     bodyStyle={{
                         padding: 0
@@ -224,6 +203,42 @@ export const CourseContentPage = (props: any) => {
                             </List.Item>
                         )}
                     />
+                </Drawer>
+                </>}
+                <FloatButton.Group shape="square"
+                    style={{ zIndex: 1000, display: "flex", justifyContent: "center", alignItems: "center", bottom: 68, left: 0, height: BUTTON_SIZE*1.1, width: BUTTON_SIZE }}
+
+                >
+                    <FloatButton style={{height: "100%", width: "100%"}}
+                        onClick={handleChatDrawerToggle}
+                        icon={<ArrowRightOutlined />}
+                        description={<Text style={{fontSize: "0.50rem", padding: 0, margin: 0}}>Chat</Text>}
+                        tooltip="Chat"
+                    />
+                </FloatButton.Group>
+                <Drawer
+                    title={<>
+                    <img style={{margin: 8}} src={OpenAiLogo} width={40} height={40} />
+                    <Text style={{fontSize: "0.8rem"}}>Course Chat for {course.title}</Text><br/>
+                    </>}
+                    placement="left"
+                    onClose={onCloseChat}
+                    open={openChat}
+                    mask={false}
+                    width={"92%"}
+                    height={"100%"}
+                    maskClosable={true}
+                    bodyStyle={{
+                        padding: "24px 8px",
+                        width: "100%",
+                        height: "100%",
+                    }}
+                >
+                    {course?.discussions_id ? 
+                    <Col sm={24} style={{overflowY: "scroll", height: "100%", padding: 8}}>
+                        <ChatPage 
+                            discussions_id={course.discussions_id} course_id={course._id} title={course.title}/>
+                    </Col> : <Title>Chat is empty</Title>}
                 </Drawer>
             </QueryClientProvider >
         </>

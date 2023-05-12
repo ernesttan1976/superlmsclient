@@ -2,7 +2,7 @@ import { Button, Col, Row, Space, Table, Typography } from "antd";
 import React, { createContext, useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { IItem } from "../models"
-import { useActiveAuthProvider, useGo, useNotification } from "@refinedev/core";
+import { useActiveAuthProvider, useGo, useInvalidate, useNotification } from "@refinedev/core";
 import { useGetIdentity } from "@refinedev/core";
 import axios from "axios";
 
@@ -68,7 +68,7 @@ const ShoppingCart: React.FC = () => {
   });
   const { open } = useNotification();
   const go = useGo();
-
+  const invalidate = useInvalidate();
 
   if (!user) return <h1>No user, please log in</h1>
   if (!cartItems) return <h1>No cart items, please goto shop page to add to cart</h1>
@@ -111,31 +111,28 @@ const ShoppingCart: React.FC = () => {
 
   async function enrollUser(user: any, cartItems: any) {
     try {
-      console.log(user, cartItems)
-      // console.log("List of course ids: ",user?.courses_id?)
-      console.log("New courses: ",...cartItems.map((item: any) => item.id))
-//...user?.courses_id?._id, 
       const newCourses_id = [...cartItems.map((item: any) => item.id)]
-      console.log("Updated courses:", newCourses_id)
-      console.log(user)
       const res = await axios.patch(`${DATA_URI}/users/enroll`,
         {
           user: user,
           courses_id: [...newCourses_id]
         })
-      console.log("Response: ", res)
 
       open?.({
         type: "success",
         message: "Success",
         description: `Thank you for your purchase!`,
       })
-      // go({
-      //   to: `/`,
-      //   type: "push",
-      // });
+      invalidate({
+        resource: "users",
+        invalidates: ["all"],
+      });
+      invalidate({
+        resource: "courses",
+        invalidates: ["all"],
+      });
       go({
-        to: `/courses/content/${cartItems[0]._id}`,
+        to: `/courses/content/${res.data.courses_id[res.data.courses_id.length-1]}`,
         type: "push",
       });
       return res.data;
@@ -155,8 +152,6 @@ const ShoppingCart: React.FC = () => {
 
     //mutate
     //add the course items to the user list
-    console.log(user)
-    console.log(cartItems)
     enrollUser(user, cartItems);
   }
 
