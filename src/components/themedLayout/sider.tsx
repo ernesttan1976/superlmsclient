@@ -242,7 +242,7 @@ export const ThemedSider: React.FC<RefineThemedLayoutSiderProps> = ({
     <Menu.Item
       key="OpenAI"
       icon={<img src={OpenAILogo} style={{width: 16, height:16}}/>}>
-      <Link to="/courses/content/645e3627be9c3e378c76495f">AI Powered Chat</Link>
+      <Link to="/chat">AI Powered Chat</Link>
     </Menu.Item>,
     <Divider key="divider" />,
     <Menu.Item

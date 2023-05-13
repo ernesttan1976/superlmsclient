@@ -41,7 +41,7 @@ import ShoppingCartPage from "./pages/shopping-cart-page"
 import { getUser } from "api/courses";
 import { IUser } from "models";
 import { useQuery } from "@tanstack/react-query"
-import ChatPage from "components/chat.component";
+import GeneralChatPage from "pages/general-chat-page";
 
 
 const App: React.FC = () => {
@@ -148,6 +148,7 @@ const App: React.FC = () => {
                 options={{
                   syncWithLocation: true,
                   warnWhenUnsavedChanges: true,
+                  mutationMode: "optimistic",
                 }}
                 resources={[
                   {
@@ -185,7 +186,7 @@ const App: React.FC = () => {
                     <Route path="/" element={<ShopPage />} />
                     <Route path="/courses/preview/:id" element={<CoursePreviewPage />} />
                     <Route path="/courses/content/:id" element={<CourseContentPage />} />
-                    <Route path="/chat" element={<ChatPage />} />
+                    <Route path="/chat" element={<GeneralChatPage />} />
                     <Route path="/cart" element={<ShoppingCartPage />} />
                     <Route path="/login" element={<LoginPage />} />
                   </Route>
